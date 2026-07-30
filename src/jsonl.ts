@@ -25,9 +25,23 @@ export interface JsonlProgressEvent {
   rawType?: string;
 }
 
+export interface JsonlParseState {
+  lastAgentMessage: string;
+  usage: CodexUsage;
+  /** True once any turn.completed carried a usage object (zeros count). */
+  usageReported: boolean;
+  turnError?: string;
+  threadId?: string;
+  events: JsonlProgressEvent[];
+  parseErrors: number;
+}
+
 export interface JsonlParseResult {
   lastAgentMessage: string;
   usage: CodexUsage | undefined;
+  usageReported: boolean;
+  turnError?: string;
+  threadId?: string;
   events: JsonlProgressEvent[];
   lineCount: number;
   parseErrors: number;
@@ -39,6 +53,16 @@ const EMPTY_USAGE: CodexUsage = {
   output_tokens: 0,
   reasoning_output_tokens: 0,
 };
+
+export function createJsonlParseState(): JsonlParseState {
+  return {
+    lastAgentMessage: "",
+    usage: { ...EMPTY_USAGE },
+    usageReported: false,
+    events: [],
+    parseErrors: 0,
+  };
+}
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (value !== null && typeof value === "object" && !Array.isArray(value)) {
@@ -94,6 +118,15 @@ function classify(type: string): JsonlProgressKind {
   }
 }
 
+function turnFailedMessage(obj: Record<string, unknown>): string | undefined {
+  if (typeof obj.error === "string" && obj.error.trim()) return obj.error.trim();
+  const err = asRecord(obj.error);
+  if (err && typeof err.message === "string" && err.message.trim()) {
+    return err.message.trim();
+  }
+  return undefined;
+}
+
 function summarizeEvent(type: string, obj: Record<string, unknown>): string {
   switch (type) {
     case "thread.started":
@@ -107,10 +140,10 @@ function summarizeEvent(type: string, obj: Record<string, unknown>): string {
       if (!u) return "turn.completed";
       return `turn.completed in=${num(u.input_tokens)} out=${num(u.output_tokens)}`;
     }
-    case "turn.failed":
-      return typeof obj.error === "string"
-        ? `turn.failed ${obj.error.slice(0, 80)}`
-        : "turn.failed";
+    case "turn.failed": {
+      const msg = turnFailedMessage(obj);
+      return msg ? `turn.failed ${msg.slice(0, 80)}` : "turn.failed";
+    }
     case "item.started":
     case "item.completed":
       return `${type} ${itemSummary(asRecord(obj.item))}`;
@@ -126,12 +159,7 @@ function summarizeEvent(type: string, obj: Record<string, unknown>): string {
 /** Process one JSONL line; returns null for blank lines. */
 export function consumeJsonlLine(
   line: string,
-  state: {
-    lastAgentMessage: string;
-    usage: CodexUsage;
-    events: JsonlProgressEvent[];
-    parseErrors: number;
-  },
+  state: JsonlParseState,
 ): JsonlProgressEvent | null {
   const trimmed = line.trim();
   if (!trimmed) return null;
@@ -151,8 +179,24 @@ export function consumeJsonlLine(
   }
 
   const type = obj.type as string;
+  if (type === "thread.started" && typeof obj.thread_id === "string") {
+    state.threadId = obj.thread_id;
+  }
+
   if (type === "turn.completed") {
-    state.usage = addUsage(state.usage, obj.usage);
+    if (Object.prototype.hasOwnProperty.call(obj, "usage")) {
+      state.usageReported = true;
+      state.usage = addUsage(state.usage, obj.usage);
+    }
+  }
+
+  if (type === "turn.failed") {
+    const msg = turnFailedMessage(obj);
+    if (msg) state.turnError = msg;
+  }
+
+  if (type === "error" && typeof obj.message === "string" && obj.message.trim()) {
+    state.turnError = state.turnError ?? obj.message.trim();
   }
 
   if (type === "item.completed") {
@@ -181,12 +225,7 @@ export function consumeJsonlLine(
 }
 
 export function parseJsonl(text: string): JsonlParseResult {
-  const state = {
-    lastAgentMessage: "",
-    usage: { ...EMPTY_USAGE },
-    events: [] as JsonlProgressEvent[],
-    parseErrors: 0,
-  };
+  const state = createJsonlParseState();
   const lines = text.split(/\r?\n/);
   let lineCount = 0;
   for (const line of lines) {
@@ -194,14 +233,12 @@ export function parseJsonl(text: string): JsonlParseResult {
     lineCount += 1;
     consumeJsonlLine(line, state);
   }
-  const hasUsage =
-    state.usage.input_tokens > 0 ||
-    state.usage.output_tokens > 0 ||
-    state.usage.cached_input_tokens > 0 ||
-    state.usage.reasoning_output_tokens > 0;
   return {
     lastAgentMessage: state.lastAgentMessage,
-    usage: hasUsage ? state.usage : undefined,
+    usage: state.usageReported ? state.usage : undefined,
+    usageReported: state.usageReported,
+    turnError: state.turnError,
+    threadId: state.threadId,
     events: state.events,
     lineCount,
     parseErrors: state.parseErrors,

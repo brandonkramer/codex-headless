@@ -1,6 +1,6 @@
 {
   "name": "codex-headless",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Headless Codex for Claude Code: MCP tools (review/implement/probe), profiles, and skills for review, implementation, computer-use, and built-in codex MCP.",
   "author": {
     "name": "brandonkramer",

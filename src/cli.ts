@@ -27,6 +27,8 @@ Options:
   --no-json           Disable --json (legacy -o / stderr progress only)
   --jsonl PATH        Write full JSONL event stream to PATH (implies --json)
   --no-heartbeat      Disable periodic liveness lines on stderr
+  --max-quiet-ms MS   Kill if no progress for MS (default 600000; 0 disables)
+  --max-wall-ms MS    Kill if wall clock exceeds MS (default 0 = disabled)
 
 Hermetic review flags (always): --ignore-user-config --ignore-rules
 
@@ -59,7 +61,27 @@ const sharedRunOptions = {
   "no-json": { type: "boolean" as const, default: false },
   jsonl: { type: "string" as const },
   "no-heartbeat": { type: "boolean" as const, default: false },
+  "max-quiet-ms": { type: "string" as const },
+  "max-wall-ms": { type: "string" as const },
 };
+
+function resolveHangFlags(values: {
+  "max-quiet-ms"?: string;
+  "max-wall-ms"?: string;
+}): { maxQuietMs?: number; maxWallMs?: number } {
+  const out: { maxQuietMs?: number; maxWallMs?: number } = {};
+  if (values["max-quiet-ms"] !== undefined) {
+    const n = Number(values["max-quiet-ms"]);
+    if (!Number.isFinite(n) || n < 0) throw new Error("--max-quiet-ms must be >= 0");
+    out.maxQuietMs = n;
+  }
+  if (values["max-wall-ms"] !== undefined) {
+    const n = Number(values["max-wall-ms"]);
+    if (!Number.isFinite(n) || n < 0) throw new Error("--max-wall-ms must be >= 0");
+    out.maxWallMs = n;
+  }
+  return out;
+}
 
 function resolveJsonFlags(values: {
   json?: boolean;
@@ -109,6 +131,7 @@ async function runReview(args: string[]): Promise<number> {
 
   const prompt = await loadPrompt(values.file, values.prompt, false);
   const { json, jsonlPath } = resolveJsonFlags(values);
+  const hang = resolveHangFlags(values);
 
   const result = await runCodexExec({
     profile: "review",
@@ -122,6 +145,7 @@ async function runReview(args: string[]): Promise<number> {
     json,
     jsonlPath,
     heartbeatMs: values["no-heartbeat"] ? 0 : undefined,
+    ...hang,
   });
 
   if (!values.quiet) {
@@ -160,6 +184,7 @@ async function runImplement(args: string[]): Promise<number> {
 
   const prompt = await loadPrompt(values.file, values.prompt, true);
   const { json, jsonlPath } = resolveJsonFlags(values);
+  const hang = resolveHangFlags(values);
 
   const result = await runCodexExec({
     profile,
@@ -170,6 +195,7 @@ async function runImplement(args: string[]): Promise<number> {
     json,
     jsonlPath,
     heartbeatMs: values["no-heartbeat"] ? 0 : undefined,
+    ...hang,
   });
 
   if (!values.quiet) {
@@ -201,6 +227,7 @@ async function runProbe(args: string[]): Promise<number> {
 
   const prompt = await loadPrompt(values.file, values.prompt, true);
   const { json, jsonlPath } = resolveJsonFlags(values);
+  const hang = resolveHangFlags(values);
 
   const result = await runCodexExec({
     profile: "probe",
@@ -210,6 +237,7 @@ async function runProbe(args: string[]): Promise<number> {
     json,
     jsonlPath,
     heartbeatMs: values["no-heartbeat"] ? 0 : undefined,
+    ...hang,
   });
 
   if (!values.quiet) {

@@ -45,7 +45,7 @@ Tool: `codex_headless_review` — see [codex-headless/references/review-tool.md]
 
 ## Timeouts
 
-Large Sol high reviews often exceed 90s. Soft hang bound: **~10 minutes** with no progress → `verdict: "inconclusive"`. Do not treat 60–90s as automatic failure.
+Large Sol high reviews often exceed 90s. Soft hang bound: **~10 minutes** with no progress → wrapper kills the process (`maxQuietMs`, default 600000) and surfaces hang failure; orchestrator maps that to `verdict: "inconclusive"`. Do not treat 60–90s as automatic failure. Never auto-retry after `thread.started` / tool items (`retrySafe=false`).
 
 ## Shell fallback (MCP tool missing only)
 

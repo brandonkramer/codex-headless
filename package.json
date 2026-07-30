@@ -1,6 +1,6 @@
 {
   "name": "codex-headless",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Codex headless orchestration: MCP tools (review/implement/probe), profiles, and agent skills for review, implementation, computer-use, and built-in codex MCP.",
   "type": "module",
   "license": "MIT",
@@ -12,7 +12,9 @@
     "cli": "node --import tsx src/cli.ts",
     "mcp": "node --import tsx src/mcp/server.ts",
     "install:codex": "bash scripts/install.sh",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "test:stability": "node --import tsx --test src/stability.test.ts"
   },
   "engines": {
     "node": ">=22"

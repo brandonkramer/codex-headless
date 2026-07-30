@@ -1,0 +1,6 @@
+{"type":"thread.started","thread_id":"thread_committed01"}
+{"type":"turn.started"}
+{"type":"item.started","item":{"type":"command_execution","command":"echo hi"}}
+{"type":"item.completed","item":{"type":"command_execution","command":"echo hi"}}
+{"type":"item.completed","item":{"type":"agent_message","text":"edited files"}}
+{"type":"turn.completed","usage":{"input_tokens":100,"cached_input_tokens":20,"output_tokens":50,"reasoning_output_tokens":10}}
