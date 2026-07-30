@@ -1,21 +1,23 @@
 # codex_headless_implement
 
-Implementation via `--profile implement --ephemeral` (Luna, workspace-write).
+Implementation via `--ephemeral` (workspace-write). Default `--profile implement` (Luna).
 
 ## Parameters
 
 | Param | Effect |
 |-------|--------|
-| `prompt` (required) | Implementation task |
+| `prompt` (required) | Implementation or plan-only task |
+| `profile` | `implement` (default, Luna) or `engineer` (Sol) |
 | `structured: true` | `implement-report.schema.json` |
 | `cwd` | Working directory override |
 
 ## Orchestrator worker subagents
 
-`codex_headless_implement` with `structured: true` for parallel workers.
+- **codex-planner** → `profile: "engineer"` + plan-only prompt (no edits)
+- **codex-implementer** → default `implement` + `structured: true`
 
 Shell details: [codex-implementation/references/parallel-workers.md](../codex-implementation/references/parallel-workers.md).
 
 ## Note
 
-Always Luna — for Sol default edits use shell [engineer-one-shot.md](../codex-implementation/references/engineer-one-shot.md). Escalate to Terra/Sol if quality misses.
+Escalate to Terra/Sol if Luna workers miss the bar. Bounded Sol edits: `profile: "engineer"` or shell [engineer-one-shot.md](../codex-implementation/references/engineer-one-shot.md).

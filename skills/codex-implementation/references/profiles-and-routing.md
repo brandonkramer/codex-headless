@@ -26,7 +26,7 @@ Escalate: `probe` → `engineer` → `implement` → `review`.
 
 ## MCP note
 
-`codex_headless_implement` always uses `--profile implement` (Luna). For Sol edits via MCP, shell `--profile engineer` or built-in `codex` MCP inline config. Escalate to `gpt-5.6-terra` / Sol if Luna misses the bar.
+`codex_headless_implement` defaults to `--profile implement` (Luna); pass `profile: "engineer"` for Sol (planner / bounded edits). Escalate to `gpt-5.6-terra` / Sol if Luna misses the bar.
 
 ## Orchestrator duties
 

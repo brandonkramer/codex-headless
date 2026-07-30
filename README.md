@@ -1,6 +1,6 @@
 # Codex Headless
 
-Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, agent skills, and the **codex-reviewer** subagent for multi-agent orchestration.
+Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, agent skills, and orchestration subagents (**codex-planner**, **codex-implementer**, **codex-reviewer**).
 
 ## Layout
 
@@ -8,7 +8,7 @@ Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, age
 - `.claude-plugin/` — Claude Code marketplace + plugin manifest
 - `.mcp.json` — Claude MCP server entry (`CLAUDE_PLUGIN_ROOT` → `bin/codex-headless-mcp`)
 - `skills/` — codex-headless, codex-review, codex-implementation, codex-computer-use, codex-mcp
-- `agents/` — codex-reviewer
+- `agents/cursor/` / `agents/claude/` — host-specific planner / implementer / reviewer
 - `profiles/` — reference `codex exec --profile` configs (install → `~/.codex/`)
 
 Requires `node>=22`, `pnpm install` in this repo, and `codex` on PATH (for runs).
@@ -63,7 +63,7 @@ Restart Claude Code / `/reload-plugins` after install. MCP entry is `.mcp.json`
 
 ## Use
 
-**In Cursor (orchestrator + worker subagents):** prefer MCP tools — `codex_headless_review`, `codex_headless_implement`, `codex_headless_probe`. Final verification: **codex-reviewer** plugin agent.
+**Orchestrator + workers:** prefer MCP — `codex_headless_probe` / `codex_headless_implement` / `codex_headless_review`. Plugin agents: **codex-planner** → **codex-implementer**(s) → **codex-reviewer**.
 
 **Shell / CI:** `bin/codex-headless` (same flags as MCP):
 
@@ -111,7 +111,9 @@ Canonical Codex skills live in [`skills/`](skills/) — each `SKILL.md` is a thi
 
 | Agent | For |
 |-------|-----|
-| [codex-reviewer](agents/codex-reviewer.md) | Final diff review + tests after worker subagents |
+| [codex-planner](agents/cursor/codex-planner.md) / [Claude](agents/claude/codex-planner.md) | Scope + worker slices (`implement` + `profile=engineer`) |
+| [codex-implementer](agents/cursor/codex-implementer.md) / [Claude](agents/claude/codex-implementer.md) | Implementation worker (`implement`, structured) |
+| [codex-reviewer](agents/cursor/codex-reviewer.md) / [Claude](agents/claude/codex-reviewer.md) | Final diff review + tests |
 
 ## Dev
 

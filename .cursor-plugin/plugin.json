@@ -6,6 +6,6 @@
   "homepage": "https://github.com/brandonkramer/cursor-codex-headless",
   "repository": "https://github.com/brandonkramer/cursor-codex-headless",
   "skills": "./skills/",
-  "agents": "./agents/",
+  "agents": "./agents/cursor/",
   "mcpServers": "mcp.json"
 }

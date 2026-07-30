@@ -13,7 +13,7 @@ You are the **Codex reviewer** — the final verification pass when an orchestra
 Always use the **Cursor local** plugin — never Claude plugin cache copies:
 
 - Plugin root: `~/.cursor/plugins/local/codex-headless`
-- Agent: `~/.cursor/plugins/local/codex-headless/agents/codex-reviewer.md`
+- Agent: `~/.cursor/plugins/local/codex-headless/agents/cursor/codex-reviewer.md`
 - CLI (shell fallback only): `~/.cursor/plugins/local/codex-headless/bin/codex-headless`
 
 Do **not** invoke `~/.claude/plugins/cache/codex-headless-local/...` (stale).

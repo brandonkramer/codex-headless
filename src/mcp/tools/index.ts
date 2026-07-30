@@ -71,20 +71,25 @@ export function registerCodexHeadlessTools(server: McpServer): void {
     "codex_headless_implement",
     {
       description:
-        "Codex implementation via codex exec --profile implement --ephemeral (gpt-5.6-luna, xhigh, workspace-write). Set structured=true for implement-report JSON schema. JSONL + usage telemetry on by default.",
+        "Codex implementation via codex exec --ephemeral (workspace-write). Default profile implement (gpt-5.6-luna, xhigh). Pass profile=engineer for gpt-5.6-sol high (codex-planner / bounded Sol work). Set structured=true for implement-report JSON schema. JSONL + usage telemetry on by default.",
       inputSchema: {
         prompt: z.string().min(1),
         cwd: cwdField,
+        profile: z
+          .enum(["implement", "engineer"])
+          .optional()
+          .default("implement")
+          .describe("implement = Luna workers (default); engineer = Sol (planner / bounded edits)"),
         structured: z.boolean().optional().default(false),
         json: jsonField,
         jsonl_path: jsonlPathField,
       },
       annotations: { destructiveHint: true },
     },
-    async ({ prompt, cwd, structured, json, jsonl_path }) =>
+    async ({ prompt, cwd, profile, structured, json, jsonl_path }) =>
       toolResult(
         await runCodexExec({
-          profile: "implement",
+          profile,
           prompt,
           cwd,
           structured,

@@ -15,9 +15,15 @@ codex exec --profile implement --ephemeral \
   "Read AGENTS.md. Implement <spec>. Keep changes surgical. Do not run tests or dev servers." < /dev/null
 ```
 
-## MCP
+## MCP / plugin agents
 
-`codex_headless_implement` with `structured: true`.
+Prefer plugin agents when available:
+
+1. **codex-planner** — scope + slices (`codex_headless_implement` + `profile: "engineer"`, plan-only)
+2. **codex-implementer** × N — `codex_headless_implement` with `structured: true`
+3. **codex-reviewer** — tests + `codex_headless_review`
+
+Or call `codex_headless_implement` directly from the parent.
 
 ## Isolation
 

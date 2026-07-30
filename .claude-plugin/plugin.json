@@ -17,5 +17,6 @@
     "gpt-5.6"
   ],
   "skills": ["./skills"],
+  "agents": ["./agents/claude"],
   "mcpServers": "./.mcp.json"
 }

@@ -12,7 +12,7 @@ Canonical location for all Codex orchestration skills.
 
 Plugin root: `~/.cursor/plugins/local/codex-headless`
 
-Agents: `agents/codex-reviewer.md` — final verification subagent after worker fan-out
+Agents (per host under `agents/cursor/` + `agents/claude/`): `codex-planner` → `codex-implementer` → `codex-reviewer`
 
 Profiles: `~/.codex/{review,engineer,implement,probe}.config.toml` (reference copies in `profiles/`)
 

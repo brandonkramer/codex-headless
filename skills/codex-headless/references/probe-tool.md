@@ -11,6 +11,6 @@ Cheap exploratory pass via `--profile probe --ephemeral` (Luna, read-only).
 
 ## Pattern
 
-Probe → escalate to `codex_headless_implement` or `codex_headless_review`.
+Cheap Luna survey only. For orchestration planning use **codex-planner** (`codex_headless_implement` + `profile: "engineer"`), then **codex-implementer**, then **codex-reviewer**.
 
 Shell details: [codex-implementation/references/probe.md](../codex-implementation/references/probe.md).

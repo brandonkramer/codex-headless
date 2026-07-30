@@ -2,7 +2,7 @@
 
 Final verification pass after worker subagents in a multi-agent orchestration workflow. Emit structured JSON the parent can parse.
 
-Invoked via Task with `subagent_type: "codex-reviewer"` (plugin agent in `agents/codex-reviewer.md`).
+Invoked via Task with `subagent_type: "codex-reviewer"` (Cursor: `agents/cursor/codex-reviewer.md`; Claude: `agents/claude/codex-reviewer.md`).
 
 If Task does **not** expose `codex-reviewer`, the **parent** must call MCP `codex_headless_review` (`structured: true`) directly — **never** fake the reviewer as `generalPurpose` / `/worker` / `/worker-composer`.
 
