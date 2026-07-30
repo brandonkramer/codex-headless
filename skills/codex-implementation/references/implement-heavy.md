@@ -1,4 +1,4 @@
-# Implement heavy (Terra)
+# Implement heavy (Luna)
 
 Cross-cutting work, ambiguous scope, or escalation from `engineer`.
 

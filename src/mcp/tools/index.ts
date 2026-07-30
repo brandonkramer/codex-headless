@@ -40,7 +40,7 @@ export function registerCodexHeadlessTools(server: McpServer): void {
     "codex_headless_review",
     {
       description:
-        "Read-only Codex review via codex exec --profile review --ephemeral --ignore-user-config --ignore-rules (gpt-5.6-sol, xhigh; no global MCP/rules). Use review_uncommitted/review_base for built-in diff review, or prompt for custom scope. Set structured=true for reviewer-verdict JSON schema. JSONL capture + usage telemetry on by default.",
+        "Read-only Codex review via codex exec --profile review --ephemeral --ignore-user-config --ignore-rules (gpt-5.6-sol, high; no global MCP/rules). Use review_uncommitted/review_base for built-in diff review, or prompt for custom scope. Set structured=true for reviewer-verdict JSON schema. JSONL capture + usage telemetry on by default.",
       inputSchema: {
         prompt: promptField,
         cwd: cwdField,
@@ -71,7 +71,7 @@ export function registerCodexHeadlessTools(server: McpServer): void {
     "codex_headless_implement",
     {
       description:
-        "Codex implementation via codex exec --profile implement --ephemeral (gpt-5.6-terra, high, workspace-write). Set structured=true for implement-report JSON schema. JSONL + usage telemetry on by default.",
+        "Codex implementation via codex exec --profile implement --ephemeral (gpt-5.6-luna, xhigh, workspace-write). Set structured=true for implement-report JSON schema. JSONL + usage telemetry on by default.",
       inputSchema: {
         prompt: z.string().min(1),
         cwd: cwdField,

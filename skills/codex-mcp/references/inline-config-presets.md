@@ -4,6 +4,8 @@ Built-in MCP tools **`codex`** and **`codex-reply`** do not accept `--profile`. 
 
 `config.profile` is **rejected** — use inline keys.
 
+Default `service_tier` is `default` (standard API pricing). Opt into `fast` (legacy alias `priority`) only when wall-clock latency matters — Fast mode is ~2× API cost for ~2.5× speed.
+
 ## Review (mirrors `--profile review`)
 
 ```json
@@ -13,8 +15,8 @@ Built-in MCP tools **`codex`** and **`codex-reply`** do not accept `--profile`. 
   "sandbox": "read-only",
   "model": "gpt-5.6-sol",
   "config": {
-    "model_reasoning_effort": "ultra",
-    "service_tier": "fast"
+    "model_reasoning_effort": "high",
+    "service_tier": "default"
   }
 }
 ```
@@ -26,10 +28,10 @@ Built-in MCP tools **`codex`** and **`codex-reply`** do not accept `--profile`. 
   "prompt": "…",
   "approval-policy": "never",
   "sandbox": "workspace-write",
-  "model": "gpt-5.6-terra",
+  "model": "gpt-5.6-luna",
   "config": {
-    "model_reasoning_effort": "high",
-    "service_tier": "fast"
+    "model_reasoning_effort": "xhigh",
+    "service_tier": "default"
   }
 }
 ```
@@ -44,7 +46,7 @@ Built-in MCP tools **`codex`** and **`codex-reply`** do not accept `--profile`. 
   "model": "gpt-5.6-sol",
   "config": {
     "model_reasoning_effort": "high",
-    "service_tier": "fast"
+    "service_tier": "default"
   }
 }
 ```
@@ -59,7 +61,7 @@ Built-in MCP tools **`codex`** and **`codex-reply`** do not accept `--profile`. 
   "model": "gpt-5.6-luna",
   "config": {
     "model_reasoning_effort": "medium",
-    "service_tier": "fast"
+    "service_tier": "default"
   }
 }
 ```

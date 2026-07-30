@@ -97,9 +97,9 @@ Built-in `codex mcp-server` is separate — only `codex` + `codex-reply` tools, 
 
 #### ▸ Gotchas
 
-- `codex_headless_implement` is always Terra — not the default `engineer` profile
+- `codex_headless_implement` is always Luna — not the default `engineer` profile
 - Ephemeral tool runs cannot resume prior context
-- Large diffs on `review_uncommitted` with ultra reasoning can take minutes — prefer MCP; soft hang → `verdict: "inconclusive"` after ~10 minutes with **no** `[codex-headless]` progress (do not fail at 60–90s; do not busy-wait / resume-while-running)
+- Large diffs on `review_uncommitted` with high reasoning can take minutes — prefer MCP; soft hang → `verdict: "inconclusive"` after ~10 minutes with **no** `[codex-headless]` progress (do not fail at 60–90s; do not busy-wait / resume-while-running)
 - Never Background-shell Codex review (Cursor turn abort kills it); never use `~/.claude/plugins/cache/codex-headless-local/...`
 - Never fake `codex-reviewer` as `generalPurpose`; if Task lacks the agent type, call `codex_headless_review` from the parent
 - MCP server requires Node ≥ 22, local `tsx` (`pnpm install`), and `codex` on PATH — launch via `node --import tsx` from `~/.cursor/plugins/local/codex-headless`

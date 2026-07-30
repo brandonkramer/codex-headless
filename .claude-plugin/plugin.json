@@ -1,0 +1,21 @@
+{
+  "name": "codex-headless",
+  "version": "0.2.5",
+  "description": "Headless Codex for Claude Code: MCP tools (review/implement/probe), profiles, and skills for review, implementation, computer-use, and built-in codex MCP.",
+  "author": {
+    "name": "brandonkramer",
+    "url": "https://github.com/brandonkramer/cursor-codex-headless"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "mcp",
+    "review",
+    "implementation",
+    "orchestration",
+    "headless",
+    "gpt-5.6"
+  ],
+  "skills": ["./skills"],
+  "mcpServers": "./.mcp.json"
+}

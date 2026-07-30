@@ -1,7 +1,7 @@
 ---
 name: codex-implementation
 description: "Use Codex to perform delegated implementation, migrations, mechanical edits, structured extraction, fan-out, or clear-spec code work through `codex exec --profile engineer` (default) or `--profile implement` (heavy). MUST invoke when the user asks to hand implementation to Codex/GPT or when parallel/bulk Codex execution is useful."
-tags: [tool, codex, implementation, gpt-5.6-sol, gpt-5.6-terra, profiles, delegation, workspace-write]
+tags: [tool, codex, implementation, gpt-5.6-sol, gpt-5.6-luna, profiles, delegation, workspace-write]
 triggers:
   - "codex implement"
   - "gpt implement"

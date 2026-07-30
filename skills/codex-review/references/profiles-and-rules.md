@@ -4,8 +4,8 @@ Profiles live in `$CODEX_HOME/*.config.toml`, selected with `--profile <name>`.
 
 | Profile | Model | Reasoning | Sandbox | Use for |
 |---------|-------|-----------|---------|---------|
-| `review` | gpt-5.6-sol | xhigh | read-only | PR/diff/architecture review |
-| `implement` | gpt-5.6-terra | high | workspace-write | (sibling skill — not review) |
+| `review` | gpt-5.6-sol | high | read-only | PR/diff/architecture review |
+| `implement` | gpt-5.6-luna | xhigh | workspace-write | (sibling skill — not review) |
 | `probe` | gpt-5.6-luna | medium | read-only | cheap exploratory passes |
 
 ## Exec rules

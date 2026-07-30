@@ -1,10 +1,23 @@
 # Codex Headless
 
-Cursor plugin for headless Codex: MCP tools, CLI, profiles, agent skills, and the **codex-reviewer** subagent for multi-agent orchestration.
+Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, agent skills, and the **codex-reviewer** subagent for multi-agent orchestration.
 
-## Install
+## Layout
+
+- `.cursor-plugin/` — Cursor plugin manifest + MCP launcher
+- `.claude-plugin/` — Claude Code marketplace + plugin manifest
+- `.mcp.json` — Claude MCP server entry (`CLAUDE_PLUGIN_ROOT` → `bin/codex-headless-mcp`)
+- `skills/` — codex-headless, codex-review, codex-implementation, codex-computer-use, codex-mcp
+- `agents/` — codex-reviewer
+- `profiles/` — reference `codex exec --profile` configs (install → `~/.codex/`)
+
+Requires `node>=22`, `pnpm install` in this repo, and `codex` on PATH (for runs).
+
+## Install (Cursor)
 
 ```bash
+# symlink or clone into Cursor local plugins
+ln -sfn ~/.agents/plugins/codex-headless ~/.cursor/plugins/local/codex-headless
 cd ~/.cursor/plugins/local/codex-headless
 chmod +x bin/codex-headless bin/codex-headless-mcp scripts/*.sh
 pnpm install
@@ -12,10 +25,41 @@ bash scripts/install.sh    # profiles + schemas → ~/.codex/
 ```
 
 Enable the **codex-headless** plugin in Cursor (loads skills + MCP from
-`~/.cursor/plugins/local/codex-headless` — not Claude plugin cache). Plugin
-`mcp.json` launches via `node --import tsx src/mcp/server.ts` with an expanded
-PATH (Homebrew / nvm / Volta). Or add to `~/.cursor/mcp.json` using that same
-pattern / `bin/codex-headless-mcp`.
+`~/.cursor/plugins/local/codex-headless`). Plugin `mcp.json` launches via
+`node --import tsx src/mcp/server.ts` with an expanded PATH (Homebrew / nvm /
+Volta). Or add to `~/.cursor/mcp.json` using that same pattern /
+`bin/codex-headless-mcp`.
+
+## Install (Claude Code)
+
+Same clone — marketplace root is this repo (`.claude-plugin/marketplace.json`):
+
+```bash
+claude plugin marketplace add /path/to/codex-headless
+claude plugin install codex-headless@codex-headless-local
+bash scripts/install.sh    # profiles + schemas → ~/.codex/
+```
+
+Or in `~/.claude/settings.json`:
+
+```json
+{
+  "enabledPlugins": {
+    "codex-headless@codex-headless-local": true
+  },
+  "extraKnownMarketplaces": {
+    "codex-headless-local": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/YOU/.agents/plugins/codex-headless"
+      }
+    }
+  }
+}
+```
+
+Restart Claude Code / `/reload-plugins` after install. MCP entry is `.mcp.json`
+(`${CLAUDE_PLUGIN_ROOT}/bin/codex-headless-mcp`).
 
 ## Use
 
@@ -40,12 +84,14 @@ Review runs always use `--ignore-user-config --ignore-rules`. JSONL (`--json`) i
 
 Installed to `~/.codex/` by `scripts/install.sh`. Reference copies in [`profiles/`](profiles/).
 
-| Profile | Model | Reasoning | Sandbox |
-|---------|-------|-----------|---------|
-| `review` | gpt-5.6-sol | xhigh | read-only |
-| `engineer` | gpt-5.6-sol | high | workspace-write |
-| `implement` | gpt-5.6-terra | high | workspace-write |
-| `probe` | gpt-5.6-luna | medium | read-only |
+| Profile | Model | Reasoning | Sandbox | service_tier |
+|---------|-------|-----------|---------|--------------|
+| `review` | gpt-5.6-sol | high | read-only | `default` |
+| `engineer` | gpt-5.6-sol | high | workspace-write | `default` |
+| `implement` | gpt-5.6-luna | xhigh | workspace-write | `default` |
+| `probe` | gpt-5.6-luna | medium | read-only | `default` |
+
+Opt into Fast with `-c service_tier="fast"` when latency matters (~2× API cost).
 
 Structured JSON schemas: [`schemas/`](schemas/) → `~/.codex/schemas/`.
 

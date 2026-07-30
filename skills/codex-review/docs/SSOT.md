@@ -10,7 +10,7 @@ skip:
 
 ## CODEX REVIEW
 
-Independent read-only code review via `codex exec --profile review --ephemeral --ignore-user-config --ignore-rules` (gpt-5.6-sol, xhigh, read-only; no global MCP/rules).
+Independent read-only code review via `codex exec --profile review --ephemeral --ignore-user-config --ignore-rules` (gpt-5.6-sol, high, read-only; no global MCP/rules).
 
 ---
 
@@ -56,9 +56,9 @@ Profiles are separate files: `~/.codex/<name>.config.toml`, selected with `codex
 
 | Profile file | Model | Reasoning | Sandbox |
 |--------------|-------|-----------|---------|
-| `review.config.toml` | gpt-5.6-sol | ultra | read-only |
+| `review.config.toml` | gpt-5.6-sol | high | read-only |
 
-Key config keys: `model`, `model_reasoning_effort`, `approval_policy`, `sandbox_mode`, `service_tier`. See sample config for full schema.
+Key config keys: `model`, `model_reasoning_effort`, `approval_policy`, `sandbox_mode`, `service_tier` (`default`; opt into `fast` only for latency — ~2× API cost). See sample config for full schema.
 
 Codex reads `AGENTS.md` (and related filenames) from the repo for project instructions — reference in review prompts when relevant.
 

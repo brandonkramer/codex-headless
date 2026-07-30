@@ -28,9 +28,9 @@ Delegated code changes via `codex exec --profile engineer` (default) or `--profi
 | Profile | Model | Reasoning | Sandbox | When |
 |---------|-------|-----------|---------|------|
 | `engineer` | gpt-5.6-sol | high | workspace-write | **Default** — bounded spec, surgical edits |
-| `implement` | gpt-5.6-terra | high | workspace-write | Multi-file refactors, ambiguity, parallel fan-out |
+| `implement` | gpt-5.6-luna | xhigh | workspace-write | Multi-file refactors, ambiguity, parallel fan-out |
 | `probe` | gpt-5.6-luna | medium | read-only | Explore scope; no edits |
-| `review` | gpt-5.6-sol | ultra | read-only | Patch proposal only |
+| `review` | gpt-5.6-sol | high | read-only | Patch proposal only |
 
 Escalation: `probe` → `engineer` → `implement` → `review`.
 
@@ -42,7 +42,7 @@ Escalation: `probe` → `engineer` → `implement` → `review`.
 | Unknown scope | `probe` first |
 | Engineer output missed edge cases | `implement`, then `review` |
 
-**MCP:** `codex_headless_implement` always uses `implement` (Terra). For Sol edits via MCP, shell `codex exec --profile engineer` or built-in `codex` MCP with inline config.
+**MCP:** `codex_headless_implement` always uses `implement` (Luna). For Sol edits via MCP, shell `codex exec --profile engineer` or built-in `codex` MCP with inline config. Escalate to Terra/Sol if Luna misses the bar.
 
 ---
 
@@ -69,8 +69,8 @@ Since Codex **0.134.0**: independent profile files only — no `[profiles.*]` in
 |-----|----------------------------------|
 | `approval_policy` | `never` (unattended headless) |
 | `sandbox_mode` | `workspace-write` for engineer/implement; `read-only` for probe |
-| `model_reasoning_effort` | `high` (engineer/implement), `medium` (probe) |
-| `service_tier` | `fast` |
+| `model_reasoning_effort` | `xhigh` (implement), `high` (engineer/review), `medium` (probe) |
+| `service_tier` | `default` (use `fast` only when latency matters — ~2× API cost) |
 
 Prompts should tell Codex to read `AGENTS.md` / project instruction files when present.
 
@@ -95,7 +95,7 @@ Default `codex exec` sandbox is read-only; implementation profiles must set `wor
 
 - Use `--profile implement` + optional `implement-report.schema.json`
 - Worktree isolation to avoid edit collisions
-- Label agents `gpt-5.6-terra:` for implement workers, `gpt-5.6-sol:` for engineer runs
+- Label agents `gpt-5.6-luna:` for implement workers, `gpt-5.6-sol:` for engineer runs
 
 ---
 

@@ -1,6 +1,6 @@
 # codex_headless_implement
 
-Implementation via `--profile implement --ephemeral` (Terra, workspace-write).
+Implementation via `--profile implement --ephemeral` (Luna, workspace-write).
 
 ## Parameters
 
@@ -18,4 +18,4 @@ Shell details: [codex-implementation/references/parallel-workers.md](../codex-im
 
 ## Note
 
-Always Terra — for Sol default edits use shell [engineer-one-shot.md](../codex-implementation/references/engineer-one-shot.md).
+Always Luna — for Sol default edits use shell [engineer-one-shot.md](../codex-implementation/references/engineer-one-shot.md). Escalate to Terra/Sol if quality misses.

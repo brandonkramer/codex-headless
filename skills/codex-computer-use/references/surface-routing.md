@@ -14,7 +14,7 @@ Permissions: macOS Screen Recording + Accessibility; manage sites/apps in Codex 
 
 ## Verify profile (CLI orchestration)
 
-Headless from Cursor: `--profile review --ephemeral` (read-only, ultra).
+Headless from Cursor: `--profile review --ephemeral` (read-only, high).
 
 Fix after verify (explicit user request only): `--profile implement` (workspace-write).
 

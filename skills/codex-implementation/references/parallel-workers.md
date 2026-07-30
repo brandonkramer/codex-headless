@@ -22,7 +22,7 @@ codex exec --profile implement --ephemeral \
 ## Isolation
 
 - Worktree per worker — no shared checkout edits
-- Label agents `gpt-5.6-terra:` for implement workers
+- Label agents `gpt-5.6-luna:` for implement workers
 
 ## After workers
 

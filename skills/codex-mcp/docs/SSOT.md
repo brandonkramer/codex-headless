@@ -41,11 +41,11 @@ Run server: `codex mcp-server` (stdio). Inherits global Codex config overrides.
 
 | Preset | model | config.model_reasoning_effort | sandbox |
 |--------|-------|-------------------------------|---------|
-| Review | gpt-5.6-sol | ultra | read-only |
-| Implement | gpt-5.6-terra | high | workspace-write |
+| Review | gpt-5.6-sol | high | read-only |
+| Implement | gpt-5.6-luna | xhigh | workspace-write |
 | Probe | gpt-5.6-luna | medium | read-only |
 
-Common top-level fields: `prompt`, `approval-policy: never`, `sandbox`, `model`, nested `config` for `model_reasoning_effort`, `service_tier`.
+Common top-level fields: `prompt`, `approval-policy: never`, `sandbox`, `model`, nested `config` for `model_reasoning_effort`, `service_tier` (`default` unless latency needs `fast` — ~2× cost).
 
 Field names align with `config.toml` keys documented in [config-sample](https://developers.openai.com/codex/config-sample).
 

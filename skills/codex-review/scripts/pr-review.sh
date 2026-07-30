@@ -141,7 +141,7 @@ $(cat "$DIFF_FILE")
 --- DIFF END ---
 EOF
 
-# Profile review: ultra reasoning, read-only. PTY streams progress; -o captures final body.
+# Profile review: high reasoning, read-only. PTY streams progress; -o captures final body.
 python3 "$SCRIPT_DIR/codex-pty.py" \
   -f "$PROMPT_FILE" \
   --max-secs "${CODEX_MAX_SECS:-600}" \

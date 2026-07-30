@@ -3,8 +3,8 @@
 | Profile | Model | Reasoning | Sandbox | When |
 |---------|-------|-----------|---------|------|
 | `engineer` | gpt-5.6-sol | high | workspace-write | **Default** — bounded spec, surgical edits |
-| `implement` | gpt-5.6-terra | high | workspace-write | Cross-cutting refactors, ambiguity, parallel workers |
-| `review` | gpt-5.6-sol | ultra | read-only | Patch proposal only (no edits) |
+| `implement` | gpt-5.6-luna | xhigh | workspace-write | Cross-cutting refactors, ambiguity, parallel workers |
+| `review` | gpt-5.6-sol | high | read-only | Patch proposal only (no edits) |
 | `probe` | gpt-5.6-luna | medium | read-only | Explore scope before editing |
 
 Escalate: `probe` → `engineer` → `implement` → `review`.
@@ -26,7 +26,7 @@ Escalate: `probe` → `engineer` → `implement` → `review`.
 
 ## MCP note
 
-`codex_headless_implement` always uses `--profile implement` (Terra). For Sol edits via MCP, shell `--profile engineer` or built-in `codex` MCP inline config.
+`codex_headless_implement` always uses `--profile implement` (Luna). For Sol edits via MCP, shell `--profile engineer` or built-in `codex` MCP inline config. Escalate to `gpt-5.6-terra` / Sol if Luna misses the bar.
 
 ## Orchestrator duties
 

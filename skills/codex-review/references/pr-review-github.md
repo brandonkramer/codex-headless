@@ -125,7 +125,7 @@ Use **shortcodes** (`:robot:`) — GitHub renders them everywhere in PR markdown
 ## Requirements
 
 - `gh`, `codex`, `jq`, and `python3` on `PATH`
-- Uses `--profile review` (ultra, read-only) internally
+- Uses `--profile review` (high, read-only) internally
 - Reviews the **PR diff from GitHub**, not assumed local branch state
 
 ## After

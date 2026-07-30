@@ -1,0 +1,17 @@
+{
+  "name": "codex-headless-local",
+  "owner": {
+    "name": "brandonkramer"
+  },
+  "metadata": {
+    "description": "Local codex-headless plugin for Claude Code (same clone as Cursor plugin)"
+  },
+  "plugins": [
+    {
+      "name": "codex-headless",
+      "description": "Headless Codex MCP tools and skills (review, implement, probe) — luna/sol profiles",
+      "source": ".",
+      "category": "developer-tools"
+    }
+  ]
+}

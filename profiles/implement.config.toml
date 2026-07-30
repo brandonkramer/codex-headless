@@ -1,7 +1,7 @@
 # Headless implementation (bulk/mechanical edits).
 # Usage: codex exec --profile implement --ephemeral ...
-model = "gpt-5.6-terra"
-model_reasoning_effort = "high"
+model = "gpt-5.6-luna"
+model_reasoning_effort = "xhigh"
 approval_policy = "never"
 sandbox_mode = "workspace-write"
-service_tier = "fast"
+service_tier = "default"
