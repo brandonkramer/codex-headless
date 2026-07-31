@@ -2,8 +2,9 @@
 /**
  * Cross-platform MCP launcher for Claude Code / Cursor.
  * Bash shebang scripts fail on Windows Claude plugin reconnect (-32000).
- * Claude's plugin cache on Windows often breaks pnpm symlink copies of
- * node_modules — fall back to ~/.cursor/plugins/local/codex-headless when needed.
+ * Claude's Windows plugin cache copies of pnpm node_modules often break
+ * (EPERM on nested store links) — prefer ~/.cursor/plugins/local/codex-headless
+ * when present.
  */
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -11,18 +12,24 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import process from "node:process";
 
+function hasTsx(root) {
+  return existsSync(join(root, "node_modules", "tsx", "package.json"));
+}
+
 function resolveRoot() {
   const here = join(dirname(fileURLToPath(import.meta.url)), "..");
-  if (existsSync(join(here, "node_modules", "tsx"))) return here;
-
   const home = process.env.USERPROFILE || process.env.HOME || "";
-  const candidates = [
+  const preferred = [
     join(home, ".cursor", "plugins", "local", "codex-headless"),
     join(home, ".agents", "plugins", "codex-headless"),
-  ];
-  for (const candidate of candidates) {
-    if (existsSync(join(candidate, "node_modules", "tsx"))) return candidate;
-  }
+  ].filter((p) => p && hasTsx(p));
+
+  // Claude cache on Windows frequently ships a broken pnpm tree.
+  const inClaudeCache = here.replace(/\\/g, "/").includes("/.claude/plugins/cache/");
+  if (inClaudeCache && preferred.length > 0) return preferred[0];
+
+  if (hasTsx(here)) return here;
+  if (preferred.length > 0) return preferred[0];
   return here;
 }
 
