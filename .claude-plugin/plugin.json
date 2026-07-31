@@ -1,6 +1,6 @@
 {
   "name": "codex-headless",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Headless Codex for Claude Code: MCP tools, profiles, skills, subagents, and Dynamic workflows (/codex-implement, /codex-review-loop).",
   "author": {
     "name": "brandonkramer",

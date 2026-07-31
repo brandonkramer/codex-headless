@@ -32,7 +32,7 @@ Cursor plugin MCP tools that wrap `codex exec --profile … --ephemeral` for mul
 | `codex_headless_implement` | `codex exec --profile implement --ephemeral --json` | implement | workspace-write |
 | `codex_headless_probe` | `codex exec --profile probe --ephemeral --json` | probe | read-only |
 
-All tools always pass `--ephemeral`. JSONL (`--json`) is on by default. For `codex exec resume`, use shell or built-in `codex` + `codex-reply` MCP.
+All tools always pass `--ephemeral` and `--skip-git-repo-check`. JSONL (`--json`) is on by default. For `codex exec resume`, use shell or built-in `codex` + `codex-reply` MCP.
 
 ### codex_headless_review
 

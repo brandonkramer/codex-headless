@@ -10,7 +10,7 @@ Plugin tools shell out to `codex exec --profile … --ephemeral`.
 
 ## Ephemeral rule
 
-All tools always pass `--ephemeral`. For `codex exec resume`, use shell or built-in `codex` + `codex-reply`.
+All tools always pass `--ephemeral` and `--skip-git-repo-check` (non-git / untrusted cwd OK). For `codex exec resume`, use shell or built-in `codex` + `codex-reply`.
 
 ## Gap
 

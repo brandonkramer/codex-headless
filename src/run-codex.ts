@@ -68,6 +68,11 @@ export interface RunCodexOptions {
     args: string[],
     cwd: string,
   ) => ChildProcessWithoutNullStreams;
+  /**
+   * Pass `--skip-git-repo-check` (default true). Headless workers often run in
+   * non-git cwd / untrusted trees; without this Codex exits "Not inside a trusted directory".
+   */
+  skipGitRepoCheck?: boolean;
 }
 
 export interface RunCodexResult {
@@ -396,6 +401,11 @@ export async function runCodexExec(opts: RunCodexOptions): Promise<RunCodexResul
   const spawnCodex = opts.spawnCodex ?? defaultSpawn;
 
   const args = ["exec", "--profile", opts.profile, "--ephemeral", "-o", outFile];
+
+  // Default on: MCP/CLI one-shots must work outside git repos and untrusted trees.
+  if (opts.skipGitRepoCheck !== false) {
+    args.push("--skip-git-repo-check");
+  }
 
   if (opts.profile === "review") {
     applyHermeticReviewFlags(args);
