@@ -1,6 +1,6 @@
 {
   "name": "codex-headless",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Headless Codex for Claude Code: MCP tools (review/implement/probe), profiles, and skills for review, implementation, computer-use, and built-in codex MCP.",
   "author": {
     "name": "brandonkramer",
@@ -16,7 +16,13 @@
     "headless",
     "gpt-5.6"
   ],
-  "skills": ["./skills"],
-  "agents": ["./agents/claude"],
+  "skills": [
+    "./skills"
+  ],
+  "agents": [
+    "./agents/claude/codex-planner.md",
+    "./agents/claude/codex-implementer.md",
+    "./agents/claude/codex-reviewer.md"
+  ],
   "mcpServers": "./.mcp.json"
 }
