@@ -1,6 +1,6 @@
 {
   "name": "codex-headless",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Codex headless orchestration: MCP tools (review/implement/probe), profiles, agent skills, and Claude workflows/slash commands.",
   "keywords": [
     "codex",

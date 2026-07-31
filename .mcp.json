@@ -1,5 +1,8 @@
 {
   "codex-headless": {
-    "command": "${CLAUDE_PLUGIN_ROOT}/bin/codex-headless-mcp"
+    "command": "node",
+    "args": [
+      "${CLAUDE_PLUGIN_ROOT}/bin/codex-headless-mcp.mjs"
+    ]
   }
 }

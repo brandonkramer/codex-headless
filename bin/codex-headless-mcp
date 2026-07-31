@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
-exec "$(cd "$(dirname "$0")" && pwd)/run-ts" "src/mcp/server.ts" "$@"
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+exec node "$ROOT/codex-headless-mcp.mjs" "$@"
