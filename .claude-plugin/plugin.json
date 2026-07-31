@@ -4,7 +4,7 @@
   "description": "Headless Codex for Claude Code: MCP tools (review/implement/probe), profiles, and skills for review, implementation, computer-use, and built-in codex MCP.",
   "author": {
     "name": "brandonkramer",
-    "url": "https://github.com/brandonkramer/cursor-codex-headless"
+    "url": "https://github.com/brandonkramer/codex-headless"
   },
   "license": "MIT",
   "keywords": [
