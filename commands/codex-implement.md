@@ -28,14 +28,29 @@ Workflow({
   scriptPath: "${CLAUDE_PLUGIN_ROOT}/workflows/implement.js",
   args: {
     task: "<full assignment text after the slash command>",
-    cwd: "<absolute workspace path>"
+    cwd: "<absolute path to the TARGET git repo>",
+    // when chat cwd ≠ target repo (common):
+    repo: "<same as cwd, or absolute path to target repo>",
+    baseRef: "<commit/branch for detached worktrees>",
+    worktreeParent: "<absolute dir for sibling worktrees>",
+    slices: [/* optional pre-built */]
   }
 })
 ```
 
 Optional: pass pre-built
-`slices: [{goal, tool, profile?, worktree?, structured?}]` if you already
-decomposed. Otherwise the workflow decomposes, then fans out workers.
+`slices: [{goal, tool, profile?, label?, worktree?, worktreePath?, structured?}]`.
+Otherwise the workflow decomposes, then fans out workers.
+
+### Harness gotchas (Windows / Claude Workflow)
+
+1. **args may arrive as a JSON string** — shipped `implement.js` parses that.
+2. **LF only** — never rewrite workflow scripts with CRLF; CR fails the permission
+   control-character check. Prefer `scriptPath` to the plugin file (LF in git).
+3. **Do not use `isolation: "worktree"`** when the chat session repo is not the
+   target repo — it resolves HEAD against the session cwd. Pass `repo` + `baseRef`
+   (+ `worktreeParent`) and let workers `git -C <repo> worktree add --detach …`.
+4. Point `cwd`/`repo` at the **real project**, not an empty/unrelated folder.
 
 Tell the user a short heads-up (workflow fans out multiple agents) before
 launching. When it returns:

@@ -10,19 +10,31 @@ export const meta = {
   ],
 }
 
-const ARGS =
-  typeof args === 'string'
-    ? (() => {
-        try {
-          return JSON.parse(args)
-        } catch {
-          return args
-        }
-      })()
-    : args
+/** Workflow harness sometimes delivers `args` as a JSON string (or twice-encoded). */
+function parseArgs(raw) {
+  let value = raw
+  for (let i = 0; i < 3; i++) {
+    if (typeof value !== 'string') break
+    const trimmed = value.replace(/^\uFEFF/, '').trim()
+    if (!trimmed) break
+    try {
+      value = JSON.parse(trimmed)
+    } catch {
+      break
+    }
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(
+      'review-loop workflow requires args as an object (or JSON string of an object): {scope, cwd, ...}',
+    )
+  }
+  return value
+}
 
-const scope = ARGS && ARGS.scope
-const cwd = ARGS && ARGS.cwd
+const ARGS = parseArgs(typeof args === 'undefined' ? null : args)
+
+const scope = ARGS.scope
+const cwd = ARGS.cwd
 if (!scope || typeof scope !== 'string' || !scope.trim()) {
   throw new Error(
     'review-loop workflow requires args: {scope: "<what to review>", cwd: "<workspace>"}',

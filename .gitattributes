@@ -1,0 +1,3 @@
+# Claude Workflow permission handler rejects CR (CRLF) as control characters.
+workflows/*.js text eol=lf
+commands/*.md text eol=lf
