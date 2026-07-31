@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "codex-headless",
-      "description": "Headless Codex MCP tools and skills (review, implement, probe) — luna/sol profiles",
+      "description": "Headless Codex MCP tools, skills, subagents, and Claude workflows (implement / review-loop)",
       "source": ".",
       "category": "developer-tools"
     }

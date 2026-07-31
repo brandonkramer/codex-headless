@@ -1,6 +1,6 @@
 # Codex Headless
 
-Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, agent skills, and orchestration subagents (**codex-planner**, **codex-implementer**, **codex-reviewer**).
+Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, agent skills, orchestration subagents (**codex-planner**, **codex-implementer**, **codex-reviewer**), and Claude Code workflows/slash commands.
 
 ## Layout
 
@@ -9,6 +9,8 @@ Headless Codex for **Cursor** and **Claude Code**: MCP tools, CLI, profiles, age
 - `.mcp.json` — Claude MCP server entry (`CLAUDE_PLUGIN_ROOT` → `bin/codex-headless-mcp`)
 - `skills/` — codex-headless, codex-review, codex-implementation, codex-computer-use, codex-mcp
 - `agents/cursor/` / `agents/claude/` — host-specific planner / implementer / reviewer
+- `commands/` — Claude slash commands (`/codex-implement`, `/codex-review-loop`, `/codex-loop`)
+- `workflows/` — Claude Code dynamic workflows (`implement`, `review-loop`)
 - `profiles/` — reference `codex exec --profile` configs (install → `~/.codex/`)
 
 Requires `node>=22`, `pnpm install` in this repo, and `codex` on PATH (for runs).
@@ -64,6 +66,25 @@ Restart Claude Code / `/reload-plugins` after install. MCP entry is `.mcp.json`
 ## Use
 
 **Orchestrator + workers:** prefer MCP — `codex_headless_probe` / `codex_headless_implement` / `codex_headless_review`. Plugin agents: **codex-planner** → **codex-implementer**(s) → **codex-reviewer**.
+
+### Claude slash commands
+
+| Command | Role |
+|---------|------|
+| `/codex-implement` | You plan/sequence/integrate; fan out `codex_headless_*` workers |
+| `/codex-review-loop` | Codex reviews → Luna implement fixes → review again (max 5) |
+| `/codex-loop` | Arm Claude `/loop` to re-run implement / review / babysit |
+
+### Claude workflows (Claude Code only)
+
+Requires Dynamic workflows (Claude Code ≥ 2.1.154; enable in `/config`).
+
+| Workflow | Slash / name | What it does |
+|----------|--------------|--------------|
+| `workflows/implement.js` | `/codex-headless:implement` or via `/codex-implement` | Decompose + fan-out thin Claude wrappers that call `codex_headless_*` MCP |
+| `workflows/review-loop.js` | `/codex-headless:review-loop` or via `/codex-review-loop` | Codex review ↔ `codex_headless_implement` fix workers (max 5) |
+
+Slash commands prefer the Workflow tool when available, and fall back to direct MCP fan-out.
 
 **Shell / CI:** `bin/codex-headless` (same flags as MCP):
 

@@ -1,7 +1,7 @@
 {
   "name": "codex-headless",
-  "version": "0.2.7",
-  "description": "Headless Codex for Claude Code: MCP tools (review/implement/probe), profiles, and skills for review, implementation, computer-use, and built-in codex MCP.",
+  "version": "0.2.8",
+  "description": "Headless Codex for Claude Code: MCP tools, profiles, skills, subagents, and Dynamic workflows (/codex-implement, /codex-review-loop).",
   "author": {
     "name": "brandonkramer",
     "url": "https://github.com/brandonkramer/codex-headless"
