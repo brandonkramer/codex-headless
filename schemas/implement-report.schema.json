@@ -14,9 +14,15 @@
     },
     "recommended_verification": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": { "type": "string" },
+      "description": "Commands or checks the parent should run. Use [] if none."
     }
   },
-  "required": ["changed_files", "summary", "risks"],
+  "required": [
+    "changed_files",
+    "summary",
+    "risks",
+    "recommended_verification"
+  ],
   "additionalProperties": false
 }

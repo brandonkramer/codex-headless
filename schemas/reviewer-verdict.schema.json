@@ -17,7 +17,7 @@
           "passed": { "type": "boolean" },
           "output_snippet": { "type": "string" }
         },
-        "required": ["command", "passed"],
+        "required": ["command", "passed", "output_snippet"],
         "additionalProperties": false
       }
     },
@@ -36,7 +36,14 @@
           "accepted": { "type": "boolean" },
           "suggested_fix": { "type": "string" }
         },
-        "required": ["severity", "file", "failure_mode", "accepted"],
+        "required": [
+          "severity",
+          "file",
+          "line",
+          "failure_mode",
+          "accepted",
+          "suggested_fix"
+        ],
         "additionalProperties": false
       }
     },
@@ -49,6 +56,13 @@
       "items": { "type": "string" }
     }
   },
-  "required": ["verdict", "summary", "tests", "findings", "residual_gaps"],
+  "required": [
+    "verdict",
+    "summary",
+    "tests",
+    "findings",
+    "residual_gaps",
+    "suggested_fixes"
+  ],
   "additionalProperties": false
 }

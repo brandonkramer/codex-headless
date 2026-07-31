@@ -119,7 +119,7 @@ Treat schema "minor" as major-or-nit judgment for the loop (blocker/major drive 
 const MCP_FIX = `
 You are a thin fix worker. You MUST call codex_headless_implement
 (codex-headless MCP) to apply the fix. Do NOT edit files with your own
-Write/Edit tools unless the MCP tools are unavailable — if unavailable, set
+Write/Edit tools unless the MCP tools are unavailable - if unavailable, set
 ok=false and explain.
 
 Always pass cwd=${JSON.stringify(cwd)}, profile="implement", structured=true.
@@ -167,14 +167,14 @@ SCOPE>>>
 ${prior}
 
 Severity mapping for the loop:
-- blocker / major → must/should fix before done
-- minor / nit → optional; do not fail the loop on nits alone
+- blocker / major -> must/should fix before done
+- minor / nit -> optional; do not fail the loop on nits alone
 
 Verdict:
 - pass: no blocker/major
 - pass-with-notes: no blocker/major but noteworthy notes
 - fail: one or more blocker/major
-- inconclusive: Codex hang/cancel/unavailable — do not invent findings`,
+- inconclusive: Codex hang/cancel/unavailable - do not invent findings`,
     {
       label: `review:${iteration}`,
       phase: 'Review',

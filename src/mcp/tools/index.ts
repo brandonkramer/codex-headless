@@ -23,7 +23,9 @@ const jsonField = z
 const jsonlPathField = z
   .string()
   .optional()
-  .describe("Optional path to write the full JSONL event stream");
+  .describe(
+    "Path to write the full JSONL event stream. When omitted and json=true, a temp file under os.tmpdir() is created and returned as jsonlPath",
+  );
 
 function toolResult(result: Awaited<ReturnType<typeof runCodexExec>>) {
   const usageNote = result.usage
@@ -71,7 +73,7 @@ export function registerCodexHeadlessTools(server: McpServer): void {
     "codex_headless_implement",
     {
       description:
-        "Codex implementation via codex exec --ephemeral (workspace-write). Default profile implement (gpt-5.6-luna, xhigh). Pass profile=engineer for gpt-5.6-sol high (codex-planner / bounded Sol work). Set structured=true for implement-report JSON schema. JSONL + usage telemetry on by default.",
+        "Codex implementation via codex exec --ephemeral (workspace-write). Default profile implement (gpt-5.6-luna, xhigh). Pass profile=engineer for gpt-5.6-sol high (codex-planner / bounded Sol work). Set structured=true for implement-report JSON schema (all properties required for OpenAI strict mode). On Windows, prompts auto-include a no-apply_patch guard. JSONL + usage telemetry on by default; jsonlPath always returned when json=true.",
       inputSchema: {
         prompt: z.string().min(1),
         cwd: cwdField,

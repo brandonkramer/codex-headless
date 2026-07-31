@@ -3,7 +3,7 @@ export const meta = {
   description:
     'Fan out codex-headless workers (probe / engineer plan / implement) for a clear-spec task; Claude parent integrates',
   whenToUse:
-    'Invoked by /codex-implement when the Workflow tool is available. Requires args {task, cwd}. Optional: slices, repo, baseRef, worktreeParent. Harness may pass args as a JSON string — this script parses that. Do NOT use Workflow isolation:worktree against a different repo than cwd.',
+    'Invoked by /codex-implement when the Workflow tool is available. Requires args {task, cwd}. Optional: slices, repo, baseRef, worktreeParent. Harness may pass args as a JSON string - this script parses that. Do NOT use Workflow isolation:worktree against a different repo than cwd.',
   phases: [
     { title: 'Decompose', detail: 'split task into independent slices if not provided' },
     { title: 'Workers', detail: 'one thin Claude agent per slice; each must call codex_headless_* MCP' },
@@ -42,7 +42,7 @@ if (!cwd || typeof cwd !== 'string') {
   throw new Error('implement workflow requires args.cwd (absolute workspace path)')
 }
 
-/** Git repo to attach worktrees to (defaults to cwd). Use when the chat cwd ≠ target repo. */
+/** Git repo to attach worktrees to (defaults to cwd). Use when the chat cwd != target repo. */
 const repo = typeof ARGS.repo === 'string' && ARGS.repo.trim() ? ARGS.repo.trim() : cwd
 /** Commit/branch/ref for detached worktrees (optional). */
 const baseRef =
@@ -147,10 +147,10 @@ Profile routing is already decided for you. Pass MCP arguments EXACTLY as given
 below (after any required worktree prep). Do NOT substitute a different profile
 or tool.
 
-For plan-only engineer slices: the prompt MUST say plan only — do not edit,
+For plan-only engineer slices: the prompt MUST say plan only - do not edit,
 create, or delete files.
 
-Return a compact summary only — workers do not see parent history.
+Return a compact summary only - workers do not see parent history.
 `
 
 let slices = Array.isArray(ARGS.slices)
@@ -159,9 +159,9 @@ let slices = Array.isArray(ARGS.slices)
 
 if (slices.length === 0) {
   phase('Decompose')
-  log('No slices provided — decomposing task into parallel codex-headless workers')
+  log('No slices provided - decomposing task into parallel codex-headless workers')
   const plan = await agent(
-    `Decompose this implementation task into 2–6 independent slices for
+    `Decompose this implementation task into 2-6 independent slices for
 codex-headless workers. Each slice must be self-contained.
 
 Task:
@@ -187,7 +187,7 @@ Return JSON slices only.`,
 }
 
 if (slices.length === 0) {
-  throw new Error('Decomposition produced no slices — provide args.slices or a clearer task')
+  throw new Error('Decomposition produced no slices - provide args.slices or a clearer task')
 }
 
 if (slices.length > 8) {
@@ -222,7 +222,7 @@ const results = await parallel(
     const prepBlock = needsWorktreePrep
       ? `
 ## Worktree prep (required BEFORE MCP)
-Do NOT use Workflow isolation:worktree — it binds to the chat session repo, which
+Do NOT use Workflow isolation:worktree - it binds to the chat session repo, which
 may not be the target. Create the worktree yourself:
 
 \`\`\`bash
@@ -240,8 +240,8 @@ Then call MCP with cwd set to that worktree path (absolute).
       : slice.worktreePath
         ? `\nUse existing worktreePath as cwd: ${JSON.stringify(slice.worktreePath)}\n`
         : slice.worktree
-          ? `\nNo baseRef provided — stay in cwd=${JSON.stringify(cwd)}; keep changes surgical (label ${JSON.stringify(slice.worktree)}).\n`
-          : `\n(no worktree — runs in cwd)\n`
+          ? `\nNo baseRef provided - stay in cwd=${JSON.stringify(cwd)}; keep changes surgical (label ${JSON.stringify(slice.worktree)}).\n`
+          : `\n(no worktree - runs in cwd)\n`
 
     const mcpArgs = {
       cwd: workerCwd,
@@ -319,5 +319,5 @@ return {
   workers,
   failedIndexes: failed.map(w => w.index),
   note:
-    'Parent session must integrate worker summaries into the user-facing result. Prefer /codex-review-loop or codex-reviewer for final verification. Never rely on Workflow isolation:worktree when chat cwd ≠ target repo — pass repo+baseRef (and ideally worktreeParent) instead.',
+    'Parent session must integrate worker summaries into the user-facing result. Prefer /codex-review-loop or codex-reviewer for final verification. Never rely on Workflow isolation:worktree when chat cwd != target repo - pass repo+baseRef (and ideally worktreeParent) instead.',
 }

@@ -32,6 +32,49 @@ const DEFAULT_HEARTBEAT_MS = 15_000;
 const HANG_POLL_MS = 250;
 const KILL_GRACE_MS = 2_000;
 
+/** Windows Codex sandbox often crashes on apply_patch; force full-file writes. */
+const WIN32_NO_APPLY_PATCH =
+  "Windows sandbox note: do NOT use apply_patch. Write complete file contents " +
+  "with the normal file tools instead. Prefer small, complete file rewrites.\n\n";
+
+function killProcessTree(child: ChildProcessWithoutNullStreams): void {
+  const pid = child.pid;
+  if (!pid) return;
+  if (process.platform === "win32") {
+    try {
+      spawn("taskkill", ["/pid", String(pid), "/T", "/F"], {
+        stdio: "ignore",
+        windowsHide: true,
+      });
+    } catch {
+      try {
+        child.kill();
+      } catch {
+        // ignore
+      }
+    }
+    return;
+  }
+  try {
+    child.kill("SIGTERM");
+  } catch {
+    // ignore
+  }
+}
+
+function withWindowsImplementGuard(
+  profile: HeadlessProfile,
+  prompt: string | undefined,
+): string | undefined {
+  if (!prompt) return prompt;
+  if (process.platform !== "win32") return prompt;
+  if (profile !== "implement" && profile !== "engineer") return prompt;
+  if (prompt.includes("do NOT use apply_patch") || prompt.includes("do not use apply_patch")) {
+    return prompt;
+  }
+  return `${WIN32_NO_APPLY_PATCH}${prompt}`;
+}
+
 function resolveSchema(kind: "review" | "implement"): string {
   const name =
     kind === "review" ? "reviewer-verdict.schema.json" : "implement-report.schema.json";
@@ -163,13 +206,10 @@ function armHangWatch(
     if (!reason) return;
     killReason = reason;
     onKill(reason);
-    try {
-      child.kill("SIGTERM");
-    } catch {
-      // ignore
-    }
+    killProcessTree(child);
     graceTimer = setTimeout(() => {
       if (!child.killed) {
+        killProcessTree(child);
         try {
           child.kill("SIGKILL");
         } catch {
@@ -292,6 +332,10 @@ async function runProcess(
     child.on("close", (code) => {
       if (heartbeat) clearInterval(heartbeat);
       hangWatch.stop();
+      // Reap orphans (Windows sandbox often leaves node/vitest children).
+      if (killReason || code !== 0) {
+        killProcessTree(child);
+      }
       const exitCode =
         killReason && (code === null || code === 0) ? 124 : (code ?? 1);
       resolve({
@@ -399,6 +443,15 @@ export async function runCodexExec(opts: RunCodexOptions): Promise<RunCodexResul
   const hang = resolveHangLimits(opts);
   const onProgress = opts.onProgress ?? defaultProgress;
   const spawnCodex = opts.spawnCodex ?? defaultSpawn;
+  // Persist JSONL outside the ephemeral out-dir so callers can inspect hangs/orphans.
+  const jsonlPath =
+    opts.jsonlPath ??
+    (json
+      ? join(
+          tmpdir(),
+          `codex-headless-${opts.profile}-${Date.now()}-${Math.random().toString(16).slice(2, 8)}.jsonl`,
+        )
+      : undefined);
 
   const args = ["exec", "--profile", opts.profile, "--ephemeral", "-o", outFile];
 
@@ -420,7 +473,7 @@ export async function runCodexExec(opts: RunCodexOptions): Promise<RunCodexResul
   }
 
   const runOpts = { json, heartbeatMs, hang, onProgress, spawnCodex };
-  const finishOpts = { json, jsonlPath: opts.jsonlPath, onProgress };
+  const finishOpts = { json, jsonlPath, onProgress };
 
   let command: string;
 
@@ -446,7 +499,7 @@ export async function runCodexExec(opts: RunCodexOptions): Promise<RunCodexResul
       return finishRun(outFile, opts.outputPath, proc, opts.profile, command, finishOpts);
     }
 
-    const prompt = opts.prompt?.trim();
+    const prompt = withWindowsImplementGuard(opts.profile, opts.prompt?.trim());
     if (!prompt) {
       throw new Error(
         "prompt is required unless review_uncommitted, review_base, or review_commit is set",
