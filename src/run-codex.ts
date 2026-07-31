@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
 import { createInterface } from "node:readline";
 import { homedir } from "node:os";
-import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import type { ChildProcessWithoutNullStreams } from "node:child_process";
+import spawn from "cross-spawn";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -128,10 +129,12 @@ function defaultSpawn(
   args: string[],
   cwd: string,
 ): ChildProcessWithoutNullStreams {
+  // cross-spawn: Windows resolves Scoop's codex.cmd without shell:true (argv-safe).
+  // Bare node:child_process.spawn("codex") → ENOENT; spawn("codex.cmd") → EINVAL on Node 26.
   return spawn("codex", args, {
     cwd,
     stdio: ["pipe", "pipe", "pipe"],
-  });
+  }) as ChildProcessWithoutNullStreams;
 }
 
 function armHangWatch(

@@ -10,7 +10,12 @@ triggers:
 
 # Codex MCP (built-in server)
 
-Ad-hoc Codex via **`codex`** and **`codex-reply`**. For multi-agent orchestration one-shots, prefer [codex-headless](../codex-headless/SKILL.md).
+Ad-hoc Codex via **`codex`** and **`codex-reply`** — only when that MCP server is
+already registered. This skill does **not** wire `codex mcp-server` for you.
+
+If those tools are missing → use [codex-headless](../codex-headless/SKILL.md)
+(`codex_headless_*`) or shell `codex exec`. For multi-agent orchestration
+one-shots, prefer headless either way.
 
 ## References
 
