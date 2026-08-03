@@ -8,7 +8,7 @@ Coordinate with the general `benchmarks/` harness conceptually; this suite owns 
 
 | Item | Value |
 |---|---|
-| Task fixture | `benchmarks/brief-efficiency/fixture/` |
+| Task fixture | `benchmarks/suites/brief-efficiency/fixture/` |
 | Workspace | Fresh `mkdtemp` git repo per arm-trial; deleted after scoring |
 | Profile | `engineer` (same both arms) |
 | Default trials/arm | **3** |
@@ -79,12 +79,12 @@ Lower is better. Tokens reported separately (not in waste) to avoid conflating v
 
 ```bash
 # Unit / structural (no API)
-node --import tsx --test benchmarks/brief-efficiency/brief-efficiency-score.test.mjs \
-  benchmarks/review-brief-metrics.test.mjs
+node --import tsx --test benchmarks/suites/brief-efficiency/brief-efficiency-score.test.mjs \
+  benchmarks/suites/shared/review-brief-metrics.test.mjs
 
 # Dry-run
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs --dry-run --trials 3
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs --dry-run --trials 3
 
 # Live (sequential; costly)
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs --trials 3 --seed 42
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs --trials 3 --seed 42
 ```

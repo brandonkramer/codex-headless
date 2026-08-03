@@ -10,8 +10,8 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-export const BENCHMARKS_ROOT = HERE
-export const PLUGIN_ROOT = join(HERE, '..')
+export const BENCHMARKS_ROOT = join(HERE, '../..')
+export const PLUGIN_ROOT = join(HERE, '../../..')
 
 /** @typedef {{ input_tokens: number, cached_input_tokens: number, output_tokens: number, reasoning_output_tokens: number }} Usage */
 

@@ -8,7 +8,7 @@ Coordinate with the general `benchmarks/` harness conceptually; this suite owns 
 
 | Item | Value |
 |---|---|
-| Fixture | `benchmarks/review-fanout/fixture/` (seeded defects; frozen) |
+| Fixture | `benchmarks/suites/review-fanout/fixture/` (seeded defects; frozen) |
 | Lenses N | 3 — `correctness`, `security`, `tests-api` (same both arms) |
 | Profile | `review` (structured verdict when live) |
 | Default trials/arm | **3** (API cost bound) |
@@ -82,13 +82,13 @@ Wall and token distributions are always printed; tiny-N must not claim significa
 
 ```bash
 # Deterministic + score unit tests (no API)
-node --test benchmarks/review-fanout/review-fanout-deterministic.test.mjs \
-  benchmarks/review-fanout/review-fanout-score.test.mjs \
-  benchmarks/review-brief-metrics.test.mjs
+node --test benchmarks/suites/review-fanout/review-fanout-deterministic.test.mjs \
+  benchmarks/suites/review-fanout/review-fanout-score.test.mjs \
+  benchmarks/suites/shared/review-brief-metrics.test.mjs
 
 # Dry-run live harness (no Codex)
-node benchmarks/review-fanout/review-fanout-live.mjs --dry-run --trials 3
+node benchmarks/suites/review-fanout/review-fanout-live.mjs --dry-run --trials 3
 
 # Live (sequential; costly)
-node --import tsx benchmarks/review-fanout/review-fanout-live.mjs --trials 3 --seed 42
+node --import tsx benchmarks/suites/review-fanout/review-fanout-live.mjs --trials 3 --seed 42
 ```

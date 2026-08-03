@@ -98,7 +98,7 @@ export function renderMarkdownReport(report: BenchmarkReport): string {
     `- Quality regression: ${report.summary.qualityRegression}`,
     `- Skipped: ${report.summary.skipped}`,
     "",
-    "See [PLAN.md](./PLAN.md) and [PLAN-v2.md](../PLAN-v2.md) for methodology and pre-registered gates.",
+    "See [PLAN.md](../docs/PLAN.md) and [PLAN-v2.md](../docs/PLAN-v2.md) for methodology and pre-registered gates.",
     "",
   ];
 

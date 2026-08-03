@@ -1,4 +1,4 @@
-declare module "../../workflows/lib/review-panel-core.js" {
+declare module "../../../workflows/lib/review-panel-core.js" {
   export const EVIDENCE_BYTE_BUDGET: number;
   export const DEFAULT_LENSES: readonly {
     id: string;
@@ -25,7 +25,7 @@ declare module "../../workflows/lib/review-panel-core.js" {
   export function buildPrepPrompt(scope: string, cwd: string): string;
 }
 
-declare module "../../../workflows/lib/review-panel-core.js" {
+declare module "../../../../workflows/lib/review-panel-core.js" {
   export const EVIDENCE_BYTE_BUDGET: number;
   export const DEFAULT_LENSES: readonly {
     id: string;

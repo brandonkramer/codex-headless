@@ -2,13 +2,13 @@ import {
   buildEvidencePacket,
   buildLensReviewPrompt,
   buildPrepPrompt,
-} from "../../../workflows/lib/review-panel-core.js";
-import { assembleImplementPrompt, parseImplementBrief } from "../../../src/implement-brief.ts";
+} from "../../../../workflows/lib/review-panel-core.js";
+import { assembleImplementPrompt, parseImplementBrief } from "../../../../src/implement-brief.ts";
 import {
   disposePersistentRunner,
   runPersistentTurn,
-} from "../../../src/persistent-service.ts";
-import { threadStartParamsForProfile } from "../../../src/profile-thread-config.ts";
+} from "../../../../src/persistent-service.ts";
+import { threadStartParamsForProfile } from "../../../../src/profile-thread-config.ts";
 import {
   createLiveRunCounters,
   mergeTrialMetrics,

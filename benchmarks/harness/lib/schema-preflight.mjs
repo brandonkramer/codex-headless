@@ -9,7 +9,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { PLUGIN_ROOT } from '../review-brief-metrics.mjs'
+import { PLUGIN_ROOT } from '../../suites/shared/review-brief-metrics.mjs'
 
 /** @typedef {'review'|'implement'} SchemaKind */
 
@@ -265,8 +265,8 @@ export async function runSchemaPreflight(opts = {}) {
  * @param {{ cwd: string, maxWallMs: number }} opts
  */
 async function liveSchemaProbe(kind, opts) {
-  const { runCodexExec } = await import('../../src/run-codex.ts')
-  const { resolveStructuredSchema } = await import('../../src/schema.ts')
+  const { runCodexExec } = await import('../../../src/run-codex.ts')
+  const { resolveStructuredSchema } = await import('../../../src/schema.ts')
   const schemaPath = resolveStructuredSchema(kind)
   const jsonlPath = join(opts.cwd, `.schema-preflight-${kind}.jsonl`)
   const profile = kind === 'review' ? 'review' : 'engineer'

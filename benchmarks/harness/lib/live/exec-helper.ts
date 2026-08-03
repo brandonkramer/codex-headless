@@ -1,8 +1,8 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import spawn from "cross-spawn";
 import { readFile } from "node:fs/promises";
-import { createJsonlParseState } from "../../../src/jsonl.ts";
-import { runCodexExec, type RunCodexOptions, type RunCodexResult } from "../../../src/run-codex.ts";
+import { createJsonlParseState } from "../../../../src/jsonl.ts";
+import { runCodexExec, type RunCodexOptions, type RunCodexResult } from "../../../../src/run-codex.ts";
 import {
   createLiveRunCounters,
   metricsFromRun,

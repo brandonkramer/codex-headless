@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process'
 import {
   assembleImplementPrompt,
   parseImplementBrief,
-} from '../../src/implement-brief.ts'
+} from '../../../src/implement-brief.ts'
 import {
   countOutOfScopeReads,
   countOutOfScopeWrites,

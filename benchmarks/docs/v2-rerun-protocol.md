@@ -18,13 +18,13 @@ pnpm run typecheck:benchmarks
 pnpm run test
 pnpm run test:benchmarks
 
-node --test benchmarks/lib/trial-validity.test.mjs \
-  benchmarks/lib/schema-preflight.test.mjs \
-  benchmarks/review-fanout/review-fanout-deterministic.test.mjs \
-  benchmarks/review-fanout/review-fanout-score.test.mjs \
-  benchmarks/review-brief-metrics.test.mjs
+node --test benchmarks/harness/lib/trial-validity.test.mjs \
+  benchmarks/harness/lib/schema-preflight.test.mjs \
+  benchmarks/suites/review-fanout/review-fanout-deterministic.test.mjs \
+  benchmarks/suites/review-fanout/review-fanout-score.test.mjs \
+  benchmarks/suites/shared/review-brief-metrics.test.mjs
 
-node --import tsx --test benchmarks/brief-efficiency/brief-efficiency-score.test.mjs
+node --import tsx --test benchmarks/suites/brief-efficiency/brief-efficiency-score.test.mjs
 ```
 
 ## 2. Repair schema override (human step)
@@ -45,7 +45,7 @@ Local validation (no API):
 
 ```bash
 node -e "
-import { loadAndValidateSchema } from './benchmarks/lib/schema-preflight.mjs';
+import { loadAndValidateSchema } from './benchmarks/harness/lib/schema-preflight.mjs';
 for (const k of ['review','implement']) {
   const r = loadAndValidateSchema(k);
   console.log(k, r.source, r.path, r.ok ? 'OK' : r.violations);
@@ -57,10 +57,10 @@ for (const k of ['review','implement']) {
 ## 3. Schema acceptance gate (one call each, live)
 
 ```bash
-node --import tsx benchmarks/review-fanout/review-fanout-live.mjs \
+node --import tsx benchmarks/suites/review-fanout/review-fanout-live.mjs \
   --preflight-only --out benchmarks/out/v2-review-fanout
 
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs \
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs \
   --preflight-only --out benchmarks/out/v2-brief-efficiency
 ```
 
@@ -69,11 +69,11 @@ Both must exit 0. Artifacts: `schema-preflight.json` in each out dir.
 ## 4. Dry-run harness (no API)
 
 ```bash
-node benchmarks/review-fanout/review-fanout-live.mjs \
+node benchmarks/suites/review-fanout/review-fanout-live.mjs \
   --dry-run --trials 5 --seed 42 --skip-preflight \
   --out benchmarks/out/v2-review-fanout-dryrun
 
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs \
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs \
   --dry-run --trials 5 --seed 42 --skip-preflight \
   --out benchmarks/out/v2-brief-efficiency-dryrun
 ```
@@ -83,12 +83,12 @@ Expect labels `PASS_SPEED_AND_QUALITY` and `PASS_LOWER_WASTE_EQUAL_QUALITY` (con
 ## 5. Live confirmatory trials (sequential; costly)
 
 ```bash
-node --import tsx benchmarks/review-fanout/review-fanout-live.mjs \
+node --import tsx benchmarks/suites/review-fanout/review-fanout-live.mjs \
   --trials 5 --seed 42 \
   --out benchmarks/out/v2-review-fanout \
   2>&1 | tee benchmarks/out/v2-review-fanout-stdout.log
 
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs \
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs \
   --trials 5 --seed 42 \
   --out benchmarks/out/v2-brief-efficiency \
   2>&1 | tee benchmarks/out/v2-brief-efficiency-stdout.log
@@ -99,7 +99,7 @@ node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs \
 ```bash
 pnpm run typecheck
 pnpm run test:benchmarks
-node --test benchmarks/lib/trial-validity.test.mjs benchmarks/lib/schema-preflight.test.mjs
+node --test benchmarks/harness/lib/trial-validity.test.mjs benchmarks/harness/lib/schema-preflight.test.mjs
 git diff --check
 ```
 

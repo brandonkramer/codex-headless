@@ -2,7 +2,7 @@
 
 **Supersedes for new runs:** [review-fanout-ACCEPTANCE.md](./review-fanout-ACCEPTANCE.md) protocol details unchanged unless noted below.
 
-**v1 invalid live trials:** frozen under [out/v1-invalid-claims-2-4/](./out/v1-invalid-claims-2-4/MANIFEST.json). Do not delete or reinterpret v1 gate labels; v1 `FAIL_QUALITY` reflected schema rejection scored as 0% recall (harness bug, fixed in v2).
+**v1 invalid live trials:** frozen under [out/v1-invalid-claims-2-4/](../out/v1-invalid-claims-2-4/MANIFEST.json). Do not delete or reinterpret v1 gate labels; v1 `FAIL_QUALITY` reflected schema rejection scored as 0% recall (harness bug, fixed in v2).
 
 ## v2 corrections (harness only)
 
@@ -19,7 +19,7 @@
 
 | Item | Value |
 | --- | --- |
-| Fixture | `benchmarks/review-fanout/fixture/` (`review-fanout-seeded-v1`) |
+| Fixture | `benchmarks/suites/review-fanout/fixture/` (`review-fanout-seeded-v1`) |
 | Lenses | 3 — `correctness`, `security`, `tests-api` |
 | Profile | `review`, structured verdict both arms |
 | Trials/arm | **≥5** (confirmatory) |
@@ -31,11 +31,11 @@
 
 ```bash
 # Local Codex-strict schema check (no API)
-node benchmarks/review-fanout/review-fanout-live.mjs \
+node benchmarks/suites/review-fanout/review-fanout-live.mjs \
   --preflight-only --dry-run --out benchmarks/out/v2-review-fanout
 
 # After ~/.codex/schemas repaired — one live probe (optional but recommended)
-node --import tsx benchmarks/review-fanout/review-fanout-live.mjs \
+node --import tsx benchmarks/suites/review-fanout/review-fanout-live.mjs \
   --preflight-only --out benchmarks/out/v2-review-fanout
 ```
 

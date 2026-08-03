@@ -2,7 +2,7 @@
 
 **Supersedes for new runs:** [brief-efficiency-ACCEPTANCE.md](./brief-efficiency-ACCEPTANCE.md) protocol details unchanged unless noted below.
 
-**v1 invalid live trials:** frozen under [out/v1-invalid-claims-2-4/](./out/v1-invalid-claims-2-4/MANIFEST.json). v1 `FAIL_WASTE` with tied 0 waste was schema rejection, not a waste observation.
+**v1 invalid live trials:** frozen under [out/v1-invalid-claims-2-4/](../out/v1-invalid-claims-2-4/MANIFEST.json). v1 `FAIL_WASTE` with tied 0 waste was schema rejection, not a waste observation.
 
 ## v2 corrections (harness only)
 
@@ -19,7 +19,7 @@
 
 | Item | Value |
 | --- | --- |
-| Fixture | `benchmarks/brief-efficiency/fixture/` (clamp task; seed red / golden green) |
+| Fixture | `benchmarks/suites/brief-efficiency/fixture/` (clamp task; seed red / golden green) |
 | Profile | `engineer`, structured both arms |
 | Trials/arm | **≥5** |
 | Order | AB/BA via `--seed 42` |
@@ -31,10 +31,10 @@ Task is intentionally nontrivial (noise files + loose discovery prompt) to expos
 ## Preflight (required before live)
 
 ```bash
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs \
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs \
   --preflight-only --dry-run --out benchmarks/out/v2-brief-efficiency
 
-node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs \
+node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs \
   --preflight-only --out benchmarks/out/v2-brief-efficiency
 ```
 

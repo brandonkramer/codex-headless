@@ -1,15 +1,15 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assembleImplementPrompt, parseImplementBrief } from "../../src/implement-brief.ts";
+import { assembleImplementPrompt, parseImplementBrief } from "../../../src/implement-brief.ts";
 import {
   buildEvidencePacket,
   buildLensReviewPrompt,
   buildPrepPrompt,
   DEFAULT_LENSES,
   EVIDENCE_BYTE_BUDGET,
-} from "../../workflows/lib/review-panel-core.js";
+} from "../../../workflows/lib/review-panel-core.js";
 
-const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 /** Mirror run-codex argv shape for structural proofs (no src export required). */
 function freshExecArgs(ephemeral: boolean): string[] {

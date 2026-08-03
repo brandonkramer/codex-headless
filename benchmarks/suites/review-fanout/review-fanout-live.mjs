@@ -4,8 +4,8 @@
  * Sequential provider calls only. Parallel user latency is a derived model.
  *
  * Usage:
- *   node benchmarks/review-fanout/review-fanout-live.mjs --dry-run --trials 3
- *   node --import tsx benchmarks/review-fanout/review-fanout-live.mjs --trials 3 --seed 42
+ *   node benchmarks/suites/review-fanout/review-fanout-live.mjs --dry-run --trials 3
+ *   node --import tsx benchmarks/suites/review-fanout/review-fanout-live.mjs --trials 3 --seed 42
  */
 
 import { mkdirSync, writeFileSync, readFileSync, cpSync, existsSync } from 'node:fs'
@@ -19,7 +19,7 @@ import {
   mergeFindings,
   buildLensReviewPrompt,
   EVIDENCE_BYTE_BUDGET,
-} from '../../workflows/lib/review-panel-core.js'
+} from '../../../workflows/lib/review-panel-core.js'
 import {
   armOrderForTrial,
   bootstrapMedianDiffCI,
@@ -32,10 +32,10 @@ import {
   schedulingFromStages,
   summarizeJsonlMetrics,
   withEvidenceSuffix,
-} from '../review-brief-metrics.mjs'
+} from '../shared/review-brief-metrics.mjs'
 import { parseReviewPayload, scoreFindingsWithValidity } from './review-fanout-score.mjs'
-import { runSchemaPreflight } from '../lib/schema-preflight.mjs'
-import { detectJsonlInvalidity, mergeArmValidity, validArmValues, countValidArms } from '../lib/trial-validity.mjs'
+import { runSchemaPreflight } from '../../harness/lib/schema-preflight.mjs'
+import { detectJsonlInvalidity, mergeArmValidity, validArmValues, countValidArms } from '../../harness/lib/trial-validity.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const FIXTURE = join(HERE, 'fixture')
@@ -77,7 +77,7 @@ function loadFixture() {
 }
 
 /**
- * @param {import('../../workflows/lib/review-panel-core.js').DEFAULT_LENSES[number]} lens
+ * @param {import('../../../workflows/lib/review-panel-core.js').DEFAULT_LENSES[number]} lens
  * @param {string} scope
  * @param {string} cwd
  */
@@ -180,7 +180,7 @@ async function runProvider(opts) {
     }
   }
 
-  const { runCodexExec } = await import('../../src/run-codex.ts')
+  const { runCodexExec } = await import('../../../src/run-codex.ts')
   const result = await runCodexExec({
     profile: /** @type {'review'|'probe'} */ (opts.profile || 'review'),
     prompt: opts.prompt,
@@ -216,7 +216,7 @@ async function runBaselineArm(args) {
   const jsonlTexts = []
   let turns = 0
   let toolLike = 0
-  /** @type {import('../review-brief-metrics.mjs').Usage | null} */
+  /** @type {import('../shared/review-brief-metrics.mjs').Usage | null} */
   let usageSum = {
     input_tokens: 0,
     cached_input_tokens: 0,

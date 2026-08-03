@@ -9,12 +9,12 @@ import {
   validArmValues,
   countValidArms,
 } from './trial-validity.mjs'
-import { scoreFindingsWithValidity } from '../review-fanout/review-fanout-score.mjs'
-import { scoreBriefTrial } from '../brief-efficiency/brief-efficiency-score.mjs'
+import { scoreFindingsWithValidity } from '../../suites/review-fanout/review-fanout-score.mjs'
+import { scoreBriefTrial } from '../../suites/brief-efficiency/brief-efficiency-score.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const V1_BRIEF_JSONL = join(HERE, '../out/brief-efficiency/trial-0/typed_brief.jsonl')
-const V1_REVIEW_JSONL = join(HERE, '../out/review-fanout/trial-0/baseline-correctness.jsonl')
+const V1_BRIEF_JSONL = join(HERE, '../../out/brief-efficiency/trial-0/typed_brief.jsonl')
+const V1_REVIEW_JSONL = join(HERE, '../../out/review-fanout/trial-0/baseline-correctness.jsonl')
 
 const SCHEMA_400 = [
   JSON.stringify({ type: 'thread.started', thread_id: 'x' }),

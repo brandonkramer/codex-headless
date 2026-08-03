@@ -4,8 +4,8 @@
  * Disposable temp git repos only — never mutates the plugin repo.
  *
  * Usage:
- *   node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs --dry-run --trials 3
- *   node --import tsx benchmarks/brief-efficiency/brief-efficiency-live.mjs --trials 3 --seed 42
+ *   node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs --dry-run --trials 3
+ *   node --import tsx benchmarks/suites/brief-efficiency/brief-efficiency-live.mjs --trials 3 --seed 42
  */
 
 import {
@@ -23,7 +23,7 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import {
   assembleImplementPrompt,
   parseImplementBrief,
-} from '../../src/implement-brief.ts'
+} from '../../../src/implement-brief.ts'
 import {
   armOrderForTrial,
   bootstrapMedianDiffCI,
@@ -35,10 +35,10 @@ import {
   readJson,
   summarizeJsonlMetrics,
   withEvidenceSuffix,
-} from '../review-brief-metrics.mjs'
+} from '../shared/review-brief-metrics.mjs'
 import { scoreBriefTrial } from './brief-efficiency-score.mjs'
-import { runSchemaPreflight } from '../lib/schema-preflight.mjs'
-import { detectJsonlInvalidity, validArmValues, countValidArms } from '../lib/trial-validity.mjs'
+import { runSchemaPreflight } from '../../harness/lib/schema-preflight.mjs'
+import { detectJsonlInvalidity, validArmValues, countValidArms } from '../../harness/lib/trial-validity.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const FIXTURE = join(HERE, 'fixture')
@@ -211,7 +211,7 @@ async function runArm(opts) {
       ].join('\n') + '\n',
     )
   } else {
-    const { runCodexExec } = await import('../../src/run-codex.ts')
+    const { runCodexExec } = await import('../../../src/run-codex.ts')
     await runCodexExec({
       profile: /** @type {'engineer'|'implement'} */ (profile),
       prompt,

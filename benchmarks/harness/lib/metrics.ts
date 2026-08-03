@@ -3,8 +3,8 @@ import {
   createJsonlParseState,
   parseJsonl,
   type JsonlParseState,
-} from "../../src/jsonl.ts";
-import type { RunCodexResult } from "../../src/run-codex.ts";
+} from "../../../src/jsonl.ts";
+import type { RunCodexResult } from "../../../src/run-codex.ts";
 import type { TrialMetrics } from "./types.ts";
 
 const TOOL_ITEM_TYPES = new Set([

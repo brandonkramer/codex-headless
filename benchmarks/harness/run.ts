@@ -86,7 +86,7 @@ Options:
   --structural-only    Deterministic proofs only
   --live-only          Skip structural proofs
   --claims 1,2,3,4|all  Subset of claims (default all)
-  --protocol v1|v2     Claim-1 live protocol (default v2; see benchmarks/PLAN-v2.md)
+  --protocol v1|v2     Claim-1 live protocol (default v2; see benchmarks/docs/PLAN-v2.md)
   --output DIR         Report directory (default benchmarks/out)
 `);
 }
@@ -209,7 +209,8 @@ async function main(): Promise<void> {
 
 const isDirectRun =
   process.argv[1] !== undefined &&
-  (process.argv[1].endsWith("benchmarks/run.ts") || process.argv[1].endsWith("benchmarks/run.js"));
+  (process.argv[1].endsWith("benchmarks/harness/run.ts") ||
+    process.argv[1].endsWith("benchmarks/harness/run.js"));
 
 if (isDirectRun) {
   main().catch((err) => {

@@ -2,8 +2,8 @@
  * Score brief-efficiency trial outcomes (waste + quality).
  */
 
-import { pathMatchesWriteScope } from '../../src/implement-brief.ts'
-import { extractPathMentions } from '../review-brief-metrics.mjs'
+import { pathMatchesWriteScope } from '../../../src/implement-brief.ts'
+import { extractPathMentions } from '../shared/review-brief-metrics.mjs'
 
 /**
  * @param {string[]} changedFiles

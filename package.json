@@ -13,9 +13,9 @@
     "mcp": "node --import tsx src/mcp/server.ts",
     "install:codex": "bash scripts/install.sh",
     "typecheck": "tsc --noEmit",
-    "typecheck:benchmarks": "tsc --noEmit -p benchmarks/tsconfig.json",
+    "typecheck:benchmarks": "tsc --noEmit -p benchmarks/harness/tsconfig.json",
     "test": "node --import tsx --test src/*.test.ts src/mcp/*.test.ts",
-    "test:benchmarks": "node --import tsx --test benchmarks/lib/*.test.ts",
+    "test:benchmarks": "node --import tsx --test benchmarks/harness/lib/*.test.ts",
     "benchmark": "node scripts/benchmark/run.mjs",
     "test:stability": "node --import tsx --test src/stability.test.ts"
   },

@@ -8,7 +8,7 @@ import {
   buildEvidencePacket,
   mergeFindings,
   sha256,
-} from '../../workflows/lib/review-panel-core.js'
+} from '../../../workflows/lib/review-panel-core.js'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const sections = JSON.parse(

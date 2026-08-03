@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
-const child = spawn(process.execPath, ["--import", "tsx", join(root, "benchmarks/run.ts"), ...process.argv.slice(2)], {
+const child = spawn(process.execPath, ["--import", "tsx", join(root, "benchmarks/harness/run.ts"), ...process.argv.slice(2)], {
   stdio: "inherit",
   env: process.env,
 });
