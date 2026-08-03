@@ -400,8 +400,10 @@ async function runProcess(
       if (killReason || code !== 0) {
         killProcessTree(child);
       }
-      const exitCode =
-        killReason && (code === null || code === 0) ? 124 : (code ?? 1);
+      // A platform kill can report a non-zero child code (Windows taskkill
+      // commonly yields 1). Preserve the stable timeout contract whenever
+      // the wrapper, rather than Codex, terminated the process.
+      const exitCode = killReason ? 124 : (code ?? 1);
       resolve({
         exitCode,
         stderr,
