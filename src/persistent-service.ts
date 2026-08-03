@@ -42,7 +42,7 @@ export function getPersistentRunner(
     clientInfo: opts?.clientInfo ?? {
       name: "codex-headless",
       title: "codex-headless MCP persistent",
-      version: "0.2.14",
+      version: "0.2.15",
     },
   });
   return singleton;
