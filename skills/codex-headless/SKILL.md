@@ -1,6 +1,6 @@
 ---
 name: codex-headless
-description: "MCP tools codex_headless_review, codex_headless_implement, codex_headless_probe wrapping codex exec --profile with --ephemeral. Prefer for orchestrator worker subagents and codex-reviewer structured output."
+description: "MCP tools codex_headless_review, codex_headless_implement, codex_headless_probe (default ephemeral exec; optional resume / app-server session). Prefer for orchestrator worker subagents and codex-reviewer structured output."
 tags: [tool, codex, mcp, profiles, orchestration]
 triggers:
   - "codex headless"

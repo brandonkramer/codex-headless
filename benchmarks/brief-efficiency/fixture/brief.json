@@ -1,0 +1,9 @@
+{
+  "change": "Implement clamp(n, min, max) in src/math.js: return n limited to [min, max]. If min > max, treat as swap (use the numeric interval between them). Do not touch other files except tests if needed. Keep existing add() unchanged.",
+  "files": ["src/math.js", "test/math.test.js"],
+  "writeScope": ["src/math.js", "test/math.test.js"],
+  "checks": ["node --test test/math.test.js"],
+  "maxTurns": 8,
+  "maxToolCalls": 20,
+  "timeoutMs": 180000
+}

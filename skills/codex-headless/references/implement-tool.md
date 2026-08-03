@@ -1,15 +1,18 @@
 # codex_headless_implement
 
-Implementation via `--ephemeral` (workspace-write). Default `--profile implement` (Luna).
+Implementation via `codex exec` (workspace-write). Default `--ephemeral` and `--profile implement` (Luna).
 
 ## Parameters
 
 | Param | Effect |
 |-------|--------|
-| `prompt` (required) | Implementation or plan-only task |
+| `prompt` and/or `brief` | Task text; typed `brief` assembles preamble (`timeoutMs` → `maxWallMs`) |
 | `profile` | `implement` (default, Luna) or `engineer` (Sol) |
 | `structured: true` | `implement-report.schema.json` |
 | `cwd` | Working directory override |
+| `ephemeral` | Default true; set false to persist for `resumeThreadId` |
+| `resumeThreadId` | `codex exec resume <id>` (not with `ephemeral=true` or `persistentSessionKey`) |
+| `persistentSessionKey` | Opt-in app-server session reuse |
 
 ## Orchestrator worker subagents
 

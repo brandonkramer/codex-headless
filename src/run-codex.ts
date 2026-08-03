@@ -1,12 +1,9 @@
-import { existsSync } from "node:fs";
 import { createInterface } from "node:readline";
-import { homedir } from "node:os";
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import spawn from "cross-spawn";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { formatCodexFailure, type KillReason } from "./errors.ts";
 import { resolveHangLimits, shouldKillHang, type HangLimits } from "./hang.ts";
 import {
@@ -20,6 +17,7 @@ import {
   updateRetrySafetyFromEvent,
   type RetrySafetyState,
 } from "./retry-policy.ts";
+import { resolveStructuredSchema } from "./schema.ts";
 
 export type HeadlessProfile = "review" | "implement" | "engineer" | "probe";
 
@@ -27,7 +25,6 @@ export type ImplementProfile = "implement" | "engineer";
 
 export type ContentSource = "output-file" | "jsonl-agent-message" | "empty";
 
-const PLUGIN_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_HEARTBEAT_MS = 15_000;
 const HANG_POLL_MS = 250;
 const KILL_GRACE_MS = 2_000;
@@ -75,16 +72,6 @@ function withWindowsImplementGuard(
   return `${WIN32_NO_APPLY_PATCH}${prompt}`;
 }
 
-function resolveSchema(kind: "review" | "implement"): string {
-  const name =
-    kind === "review" ? "reviewer-verdict.schema.json" : "implement-report.schema.json";
-  const userPath = join(homedir(), ".codex", "schemas", name);
-  if (existsSync(userPath)) return userPath;
-  const bundled = join(PLUGIN_ROOT, "schemas", name);
-  if (existsSync(bundled)) return bundled;
-  return userPath;
-}
-
 export interface RunCodexOptions {
   profile: HeadlessProfile;
   prompt?: string;
@@ -116,6 +103,16 @@ export interface RunCodexOptions {
    * non-git cwd / untrusted trees; without this Codex exits "Not inside a trusted directory".
    */
   skipGitRepoCheck?: boolean;
+  /**
+   * One-shot runs pass `--ephemeral` (default true). Set false to persist session files
+   * for later `codex exec resume`.
+   */
+  ephemeral?: boolean;
+  /**
+   * Resume a persistent session by thread/session id. Omits profile/model flags (frozen from
+   * the initial run); `profile` on this call is retained only for result reporting.
+   */
+  resumeThreadId?: string;
 }
 
 export interface RunCodexResult {
@@ -144,9 +141,9 @@ function defaultProgress(line: string): void {
 
 function applyStructuredSchema(args: string[], profile: HeadlessProfile): void {
   if (profile === "review") {
-    args.push("--output-schema", resolveSchema("review"));
+    args.push("--output-schema", resolveStructuredSchema("review"));
   } else if (profile === "implement" || profile === "engineer") {
-    args.push("--output-schema", resolveSchema("implement"));
+    args.push("--output-schema", resolveStructuredSchema("implement"));
   } else {
     throw new Error("structured output is not supported for probe profile");
   }
@@ -157,6 +154,73 @@ function applyHermeticReviewFlags(args: string[]): void {
   // Workaround: -c 'mcp_servers={}' does not clear servers (Codex merge bug).
   // Pair with --ignore-rules so project/user execpolicy .rules stay out of CI/orchestration.
   args.push("--ignore-user-config", "--ignore-rules");
+}
+
+function validateRunOptions(opts: RunCodexOptions): void {
+  if (!opts.resumeThreadId) return;
+
+  if (opts.ephemeral === true) {
+    throw new Error("resume is incompatible with ephemeral=true");
+  }
+  if (opts.reviewUncommitted || opts.reviewBase || opts.reviewCommit) {
+    throw new Error(
+      "resume is incompatible with built-in diff review (review_uncommitted, review_base, review_commit)",
+    );
+  }
+  if (opts.structured) {
+    throw new Error(
+      "resume is incompatible with structured output (settings frozen from the initial run)",
+    );
+  }
+}
+
+function appendSkipGitRepoCheck(args: string[], skipGitRepoCheck: boolean | undefined): void {
+  if (skipGitRepoCheck !== false) {
+    args.push("--skip-git-repo-check");
+  }
+}
+
+function buildFreshExecArgs(
+  opts: RunCodexOptions,
+  outFile: string,
+  json: boolean,
+): string[] {
+  const args = ["exec", "--profile", opts.profile, "-o", outFile];
+
+  if (opts.ephemeral !== false) {
+    args.push("--ephemeral");
+  }
+
+  appendSkipGitRepoCheck(args, opts.skipGitRepoCheck);
+
+  if (opts.profile === "review") {
+    applyHermeticReviewFlags(args);
+  }
+
+  if (json) {
+    args.push("--json");
+  }
+
+  if (opts.structured) {
+    applyStructuredSchema(args, opts.profile);
+  }
+
+  return args;
+}
+
+/** Resume argv: `codex exec resume <SESSION_ID> …` — no profile/model (frozen). */
+function buildResumeExecArgs(
+  resumeThreadId: string,
+  outFile: string,
+  json: boolean,
+  skipGitRepoCheck: boolean | undefined,
+): string[] {
+  const args = ["exec", "resume", resumeThreadId, "-o", outFile];
+  appendSkipGitRepoCheck(args, skipGitRepoCheck);
+  if (json) {
+    args.push("--json");
+  }
+  return args;
 }
 
 interface ProcessResult {
@@ -435,6 +499,8 @@ async function finishRun(
 }
 
 export async function runCodexExec(opts: RunCodexOptions): Promise<RunCodexResult> {
+  validateRunOptions(opts);
+
   const workDir = opts.cwd ?? process.cwd();
   const tmp = await mkdtemp(join(tmpdir(), "codex-headless-"));
   const outFile = join(tmp, "out.txt");
@@ -453,31 +519,30 @@ export async function runCodexExec(opts: RunCodexOptions): Promise<RunCodexResul
         )
       : undefined);
 
-  const args = ["exec", "--profile", opts.profile, "--ephemeral", "-o", outFile];
-
-  // Default on: MCP/CLI one-shots must work outside git repos and untrusted trees.
-  if (opts.skipGitRepoCheck !== false) {
-    args.push("--skip-git-repo-check");
-  }
-
-  if (opts.profile === "review") {
-    applyHermeticReviewFlags(args);
-  }
-
-  if (json) {
-    args.push("--json");
-  }
-
-  if (opts.structured) {
-    applyStructuredSchema(args, opts.profile);
-  }
-
   const runOpts = { json, heartbeatMs, hang, onProgress, spawnCodex };
   const finishOpts = { json, jsonlPath, onProgress };
 
   let command: string;
 
   try {
+    if (opts.resumeThreadId) {
+      const args = buildResumeExecArgs(
+        opts.resumeThreadId,
+        outFile,
+        json,
+        opts.skipGitRepoCheck,
+      );
+      const prompt = withWindowsImplementGuard(opts.profile, opts.prompt?.trim());
+      if (!prompt) {
+        throw new Error("prompt is required when resumeThreadId is set");
+      }
+      command = `codex ${args.join(" ")} - < prompt.txt`;
+      const proc = await runProcess(args, workDir, prompt, runOpts);
+      return finishRun(outFile, opts.outputPath, proc, opts.profile, command, finishOpts);
+    }
+
+    const args = buildFreshExecArgs(opts, outFile, json);
+
     if (opts.reviewUncommitted) {
       args.push("review", "--uncommitted");
       command = `codex ${args.join(" ")} < /dev/null`;

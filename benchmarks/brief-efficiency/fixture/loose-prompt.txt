@@ -1,0 +1,3 @@
+This small Node project needs a clamp helper. Please look around the repo,
+figure out what is missing, implement whatever is needed so the tests pass,
+and tidy anything that seems related. Use your judgment on which files to open.

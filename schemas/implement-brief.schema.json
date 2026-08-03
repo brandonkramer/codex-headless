@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "change": {
+      "type": "string",
+      "description": "Implementation instructions (required)."
+    },
+    "files": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Start paths; smallest edit from here."
+    },
+    "checks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Focused verification commands before stopping."
+    },
+    "writeScope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Allowed write paths; defaults to files when omitted."
+    },
+    "maxTurns": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Advisory turn budget (prompt only; not wrapper-enforced)."
+    },
+    "maxToolCalls": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Advisory tool-call budget (prompt only; not wrapper-enforced)."
+    },
+    "timeoutMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Wrapper wall timeout via maxWallMs; 0 disables wall kill."
+    }
+  },
+  "required": ["change"],
+  "additionalProperties": false
+}

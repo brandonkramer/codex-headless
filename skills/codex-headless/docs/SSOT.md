@@ -11,7 +11,7 @@ skip:
 
 ## CODEX HEADLESS MCP
 
-Cursor plugin MCP tools that wrap `codex exec --profile … --ephemeral` for multi-agent orchestration (worker subagents + codex-reviewer agent).
+Cursor plugin MCP tools that wrap `codex exec --profile …` (default `--ephemeral`; optional resume / app-server) for multi-agent orchestration.
 
 ---
 
@@ -29,10 +29,11 @@ Cursor plugin MCP tools that wrap `codex exec --profile … --ephemeral` for mul
 | Tool | Maps to | Profile | Sandbox |
 |------|---------|---------|---------|
 | `codex_headless_review` | `codex exec --profile review --ephemeral --ignore-user-config --ignore-rules --json` | review | read-only |
-| `codex_headless_implement` | `codex exec --profile implement --ephemeral --json` | implement | workspace-write |
-| `codex_headless_probe` | `codex exec --profile probe --ephemeral --json` | probe | read-only |
+| `codex_headless_implement` | `codex exec --profile implement` (default `--ephemeral`) `--json` | implement | workspace-write |
+| `codex_headless_probe` | `codex exec --profile probe` (default `--ephemeral`) `--json` | probe | read-only |
+| `codex_headless_app_server_turn` | `codex app-server --listen stdio://` (opt-in) | mapped | mapped |
 
-All tools always pass `--ephemeral` and `--skip-git-repo-check`. JSONL (`--json`) is on by default. For `codex exec resume`, use shell or built-in `codex` + `codex-reply` MCP.
+Default: `--ephemeral` + `--skip-git-repo-check`. Opt out with `ephemeral: false` + later `resumeThreadId`, or use `persistentSessionKey` / `codex_headless_app_server_turn`. JSONL (`--json`) on by default for exec tools.
 
 ### codex_headless_review
 
@@ -41,7 +42,7 @@ All tools always pass `--ephemeral` and `--skip-git-repo-check`. JSONL (`--json`
 | `review_uncommitted: true` | `codex exec review --uncommitted` |
 | `review_base: "origin/main"` | `codex exec review --base …` |
 | `prompt` | Custom scope (embed diff/context) |
-| `structured: true` | `--output-schema reviewer-verdict.schema.json` |
+| `structured: true` | `--output-schema` → bundled plugin `reviewer-verdict.schema.json` (not `~/.codex/schemas/` unless `CODEX_HEADLESS_SCHEMA_OVERRIDE=1`) |
 | `cwd` | Working directory override |
 | `json` (default true) | JSONL stream; fallback last `agent_message`; `usage` |
 | `jsonl_path` | Persist full JSONL |
@@ -50,9 +51,11 @@ All tools always pass `--ephemeral` and `--skip-git-repo-check`. JSONL (`--json`
 
 | Param | Effect |
 |-------|--------|
-| `prompt` (required) | Implementation task |
-| `structured: true` | `--output-schema implement-report.schema.json` |
+| `prompt` and/or `brief` | Task; typed brief → preamble + `timeoutMs`→`maxWallMs` |
+| `structured: true` | `--output-schema` → bundled plugin `implement-report.schema.json` (override opt-in same as review) |
 | `cwd` | Working directory override |
+| `ephemeral` / `resumeThreadId` | Persist + exec resume |
+| `persistentSessionKey` | Opt-in app-server reuse |
 | `json` / `jsonl_path` | Same as review |
 
 ### codex_headless_probe
@@ -61,6 +64,7 @@ All tools always pass `--ephemeral` and `--skip-git-repo-check`. JSONL (`--json`
 |-------|--------|
 | `prompt` (required) | Exploratory read-only task |
 | `cwd` | Working directory override |
+| `ephemeral` / `resumeThreadId` / `persistentSessionKey` | Same semantics as implement |
 | `json` / `jsonl_path` | Same as review |
 
 ---

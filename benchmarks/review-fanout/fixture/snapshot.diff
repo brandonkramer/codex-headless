@@ -1,0 +1,47 @@
+diff --git a/src/auth.js b/src/auth.js
+index 1111111..2222222 100644
+--- a/src/auth.js
++++ b/src/auth.js
+@@ -1,8 +1,10 @@
+ export function sessionLabel(user) {
+-  return user.name + ' (' + user.id + ')'
++  // BUG: user.token may be null/undefined — callers crash on .slice
++  return user.name + ' #' + user.token.slice(0, 8)
+ }
+ 
+ export function isAdmin(user) {
+   return user.role === 'admin'
+ }
+diff --git a/src/api.js b/src/api.js
+index 3333333..4444444 100644
+--- a/src/api.js
++++ b/src/api.js
+@@ -1,10 +1,14 @@
+ import { execSync } from 'node:child_process'
+ import { sessionLabel } from './auth.js'
+ 
+ export function health() {
+   return { ok: true }
+ }
+ 
++export function runReport(query) {
++  // BUG: unsanitized user input passed to shell
++  return execSync('node scripts/report.js ' + query, { encoding: 'utf8' })
++}
++
+ export function greet(user) {
+   return 'hi ' + sessionLabel(user)
+ }
+diff --git a/test/api.test.js b/test/api.test.js
+index 5555555..6666666 100644
+--- a/test/api.test.js
++++ b/test/api.test.js
+@@ -1,8 +1,10 @@
+ import test from 'node:test'
+ import assert from 'node:assert/strict'
+ import { health } from '../src/api.js'
+ 
+ test('health ok', () => {
+   assert.equal(health().ok, true)
+ })
++// Note: no tests added for runReport or empty-query rejection

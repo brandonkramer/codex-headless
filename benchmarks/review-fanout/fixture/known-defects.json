@@ -1,0 +1,27 @@
+{
+  "fixtureId": "review-fanout-seeded-v1",
+  "scope": "Uncommitted changes in src/auth.js, src/api.js, and test/api.test.js",
+  "defects": [
+    {
+      "id": "DEF-NULL-TOKEN",
+      "severity": "major",
+      "lenses": ["correctness"],
+      "location_patterns": ["src/auth.js", "auth.js"],
+      "why_keywords": ["null", "undefined", "token", "guard", "optional", "crash"]
+    },
+    {
+      "id": "DEF-CMD-INJECT",
+      "severity": "blocker",
+      "lenses": ["security"],
+      "location_patterns": ["src/api.js", "api.js"],
+      "why_keywords": ["inject", "exec", "shell", "command", "unsanit", "user input", "child_process"]
+    },
+    {
+      "id": "DEF-MISSING-TEST",
+      "severity": "major",
+      "lenses": ["tests-api"],
+      "location_patterns": ["test/api.test.js", "api.test.js", "src/api.js"],
+      "why_keywords": ["missing", "coverage", "empty", "edge", "reject", "test gap", "no test"]
+    }
+  ]
+}

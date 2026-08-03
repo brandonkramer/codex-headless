@@ -1,6 +1,6 @@
 # codex_headless_probe
 
-Cheap exploratory pass via `--profile probe --ephemeral` (Luna, read-only).
+Cheap exploratory pass via `--profile probe` (Luna, read-only; default `--ephemeral`). Optional `ephemeral=false` + `resumeThreadId`, or opt-in `persistentSessionKey`.
 
 ## Parameters
 

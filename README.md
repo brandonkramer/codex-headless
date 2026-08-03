@@ -114,7 +114,7 @@ Installed to `~/.codex/` by `scripts/install.sh`. Reference copies in [`profiles
 
 Opt into Fast with `-c service_tier="fast"` when latency matters (~2× API cost).
 
-Structured JSON schemas: [`schemas/`](schemas/) → `~/.codex/schemas/`.
+Structured JSON schemas: [`schemas/`](schemas/) (bundled in plugin; `scripts/install.sh` copies reference copies to `~/.codex/schemas/` for raw `codex exec`). Plugin MCP/CLI uses bundled schemas by default — set `CODEX_HEADLESS_SCHEMA_OVERRIDE=1` only to opt into validated user copies.
 
 ## Skills
 

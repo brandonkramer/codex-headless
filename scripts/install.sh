@@ -53,6 +53,14 @@ for f in "$ROOT/schemas/"*.schema.json; do
   fi
 done
 
+echo "  schema version sidecar → $CODEX_HOME/schemas/.codex-headless-version"
+if [[ "$DRY_RUN" == "1" ]]; then
+  echo "    (from SCHEMA_SET_VERSION in src/schema.ts — keep in sync)"
+else
+  # Keep aligned with SCHEMA_SET_VERSION in src/schema.ts
+  echo "1" > "$CODEX_HOME/schemas/.codex-headless-version"
+fi
+
 if [[ -x "$ROOT/bin/codex-headless" ]]; then
   echo "  cli:     bin/codex-headless (already in plugin)"
 else
